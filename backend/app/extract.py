@@ -14,6 +14,32 @@ MONTHS = (
 MONTH_LOOKUP = {month.lower(): number for number, month in enumerate(MONTHS, 1)}
 MONTH_LOOKUP.update({month[:3].lower(): number for number, month in enumerate(MONTHS, 1)})
 
+TECH_PATTERNS = (
+    r"\btech(?:nology|nologies)?\b",
+    r"\bsoftware(?: engineering)?\b",
+    r"\bdevelopers?\b",
+    r"\bcod(?:e|ing)\b",
+    r"\bprogramming\b",
+    r"\bcomputer science\b",
+    r"\binformation technology\b",
+    r"\bartificial intelligence\b",
+    r"\bAI\b",
+    r"\bmachine learning\b",
+    r"\bcyber\s?security\b",
+    r"\bdata science\b",
+    r"\bdata engineering\b",
+    r"\brobotics\b",
+    r"\bblockchain\b",
+    r"\bfintech\b",
+    r"\bcloud computing\b",
+    r"\bweb development\b",
+    r"\bapp development\b",
+)
+
+
+def is_technology_related(text: str) -> bool:
+    return any(re.search(pattern, text, re.IGNORECASE) for pattern in TECH_PATTERNS)
+
 
 def _date_from_text(text: str) -> str | None:
     iso_match = re.search(r"\b(20\d{2})-(\d{1,2})-(\d{1,2})\b", text)
@@ -50,35 +76,20 @@ def _date_from_text(text: str) -> str | None:
 def local_extract(title: str, text: str) -> dict[str, Any]:
     combined = f"{title}. {text}"
     lowered = combined.lower()
+    has_tech_context = is_technology_related(combined)
     event_date = _date_from_text(combined)
     category = None
     if "hackathon" in lowered:
         category = "Hackathon"
-    elif "meetup" in lowered:
+    elif has_tech_context and "meetup" in lowered:
         category = "Tech meetup"
-    elif "workshop" in lowered or "bootcamp" in lowered:
+    elif has_tech_context and ("workshop" in lowered or "bootcamp" in lowered):
         category = "Tech workshop"
-    elif any(term in lowered for term in ("conference", "summit")):
+    elif has_tech_context and any(term in lowered for term in ("conference", "summit")):
         category = "Tech conference"
-    elif "startup" in lowered or "innovation" in lowered:
+    elif has_tech_context and ("startup" in lowered or "innovation" in lowered):
         category = "Startup event"
-    elif any(
-        term in lowered
-        for term in (
-            "technology",
-            "tech",
-            "software",
-            "developer",
-            "coding",
-            "programming",
-            "artificial intelligence",
-            "machine learning",
-            "cybersecurity",
-            "data science",
-            "robotics",
-            "blockchain",
-        )
-    ) or re.search(r"\bAI\b", combined, re.IGNORECASE):
+    elif has_tech_context:
         category = "Tech event"
 
     registration = "unknown"

@@ -59,6 +59,12 @@ class FixtureConnector:
                 summary="A cooking workshop on December 17, 2099.",
                 published_at=None,
             ),
+            FeedItem(
+                title="mufti Mehmood conference",
+                url="https://news.google.com/item/non-tech-conference",
+                summary="A public conference on December 18, 2099.",
+                published_at=None,
+            ),
         ]
 
 
@@ -81,12 +87,34 @@ def test_refresh_persists_and_filters_future_events(tmp_path, monkeypatch):
     monkeypatch.setattr(ingest, "enrich_with_groq", no_ai)
 
     with TestClient(main.app) as client:
+        with db.connection() as conn:
+            conn.execute(
+                """
+                INSERT INTO events (
+                    id, title, event_date, category, registration_status,
+                    source_name, source_url, source_text, last_checked, first_seen
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (
+                    "stale-non-tech",
+                    "mufti Mehmood conference",
+                    "2099-12-18",
+                    "Tech event",
+                    "unknown",
+                    source.name,
+                    "https://news.google.com/item/non-tech-conference",
+                    "Previously misclassified non-technical conference",
+                    "2099-01-01",
+                    "2099-01-01",
+                ),
+            )
         response = client.post("/api/refresh")
         assert response.status_code == 200
         assert response.json()["events_saved"] == 2
 
         all_events = client.get("/api/events").json()["events"]
         assert len(all_events) == 2
+        assert all("conference" not in event["title"].lower() for event in all_events)
         assert {event["registration_status"] for event in all_events} == {"open", "unknown"}
         assert all("source_text" not in event for event in all_events)
 
