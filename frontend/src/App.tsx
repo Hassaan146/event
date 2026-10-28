@@ -28,6 +28,11 @@ type SourceItem = {
   last_error: string | null;
 };
 
+type RefreshResult = {
+  events_saved: number;
+  errors: { source: string; error: string }[];
+};
+
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 const categories = [
   { label: "All tech events", value: "" },
@@ -59,6 +64,15 @@ function App() {
   const refreshStartedAt = useRef(0);
   const sourceCheckBaseline = useRef(new Map<string, string | null>());
 
+  const sourceCounts = useMemo(() => {
+    const autoChecked = sources.filter((source) => source.enabled).length;
+    return {
+      total: sources.length,
+      autoChecked,
+      referenceOnly: sources.length - autoChecked,
+    };
+  }, [sources]);
+
   const loadEvents = useCallback(async () => {
     const params = new URLSearchParams();
     if (query.trim()) params.set("q", query.trim());
@@ -71,10 +85,12 @@ function App() {
     setLastRefresh(data.last_refresh);
   }, [category, query, registration]);
 
-  const loadSources = useCallback(async () => {
+  const loadSources = useCallback(async (): Promise<SourceItem[]> => {
     const response = await fetch(`${API_URL}/api/sources`);
     if (!response.ok) throw new Error("Could not load configured sources.");
-    setSources(await response.json());
+    const latestSources: SourceItem[] = await response.json();
+    setSources(latestSources);
+    return latestSources;
   }, []);
 
   useEffect(() => {
@@ -112,7 +128,7 @@ function App() {
               source.last_checked &&
               source.last_checked !== sourceCheckBaseline.current.get(source.id),
           ).length;
-          setCheckedSources(completed);
+          setCheckedSources(Math.min(completed, latestSources.filter((source) => source.enabled).length));
         })
         .catch(() => {
           // The refresh request remains authoritative if a progress poll fails.
@@ -126,24 +142,26 @@ function App() {
 
   const refresh = async () => {
     refreshStartedAt.current = Date.now();
-    sourceCheckBaseline.current = new Map(sources.map((source) => [source.id, source.last_checked]));
     setElapsedSeconds(0);
     setCheckedSources(0);
     setBusy(true);
     setError("");
     setNotice("");
     try {
+      const baselineSources = await loadSources();
+      sourceCheckBaseline.current = new Map(baselineSources.map((source) => [source.id, source.last_checked]));
       const response = await fetch(`${API_URL}/api/refresh`, { method: "POST" });
       if (!response.ok) throw new Error("Source refresh failed.");
-      const result = await response.json();
-      await Promise.all([loadEvents(), loadSources()]);
-      const activeSourceCount = sources.filter((source) => source.enabled).length;
+      const result: RefreshResult = await response.json();
+      const [, latestSources] = await Promise.all([loadEvents(), loadSources()]);
+      const activeSourceCount = latestSources.filter((source) => source.enabled).length;
+      const referenceOnlyCount = latestSources.length - activeSourceCount;
       const checkedCount = Math.max(0, activeSourceCount - result.errors.length);
       setCheckedSources(activeSourceCount);
       setNotice(
         result.errors.length
-          ? `Finished checking ${checkedCount} of ${activeSourceCount} sources. ${result.errors.length} need attention. ${result.events_saved} future event listing${result.events_saved === 1 ? "" : "s"} updated.`
-          : `Done — checked all ${activeSourceCount} sources and updated ${result.events_saved} future event listing${result.events_saved === 1 ? "" : "s"}. You can view them below.`,
+          ? `Finished checking ${checkedCount} of ${activeSourceCount} auto-check sites (${latestSources.length} indexed; ${referenceOnlyCount} reference-only). ${result.errors.length} need attention. ${result.events_saved} future tech event listing${result.events_saved === 1 ? "" : "s"} updated.`
+          : `Done — checked all ${activeSourceCount} auto-check sites (${latestSources.length} indexed; ${referenceOnlyCount} reference-only) and updated ${result.events_saved} future tech event listing${result.events_saved === 1 ? "" : "s"}. You can view them below.`,
       );
       if (result.errors.length) setError("Some sources could not be checked. Their status is shown below.");
       window.requestAnimationFrame(() => {
@@ -164,8 +182,9 @@ function App() {
 
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#main">Skip to main content</a>
       <header className="topbar">
-        <a className="brand" href="#" aria-label="Fieldnotes home">
+        <a className="brand" href="/" aria-label="Fieldnotes home">
           <span className="brand-mark"><span /></span>
           <span>fieldnotes<span className="brand-dot">.</span></span>
         </a>
@@ -178,7 +197,7 @@ function App() {
         </div>
       </header>
 
-      <main>
+      <main id="main">
         <section className="hero">
           <div className="hero-copy">
             <div className="eyebrow"><span className="eyebrow-line" /> A FIELD GUIDE FOR THE CURIOUS</div>
@@ -207,17 +226,17 @@ function App() {
           </div>
 
           <div className="toolbar">
-              <div className="category-tabs" role="tablist" aria-label="Filter by technology event type">
-                {categories.map((item) => <button key={item.label} role="tab" aria-selected={category === item.value} className={category === item.value ? "tab active" : "tab"} onClick={() => setCategory(item.value)}>{item.label}</button>)}
+              <div className="category-tabs" role="group" aria-label="Filter by technology event type">
+                {categories.map((item) => <button key={item.label} type="button" aria-pressed={category === item.value} className={category === item.value ? "tab active" : "tab"} onClick={() => setCategory(item.value)}>{item.label}</button>)}
             </div>
             <div className="filters">
-              <label className="searchbox"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search events" aria-label="Search events" /></label>
-              <label className="selectbox"><select value={registration} onChange={(event) => setRegistration(event.target.value)} aria-label="Filter registration status"><option value="all">Any status</option><option value="open">Registration open</option><option value="unknown">Verify on source</option></select><ChevronDown size={14} /></label>
+              <label className="searchbox" htmlFor="event-search"><Search size={16} /><span className="sr-only">Search events</span><input id="event-search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search events" aria-label="Search events" /></label>
+              <label className="selectbox" htmlFor="registration-filter"><span className="sr-only">Filter registration status</span><select id="registration-filter" value={registration} onChange={(event) => setRegistration(event.target.value)} aria-label="Filter registration status"><option value="all">Any status</option><option value="open">Registration open</option><option value="unknown">Verify on source</option></select><ChevronDown size={14} /></label>
             </div>
           </div>
 
           {busy && (
-            <div className="refresh-progress" role="status" aria-live="polite" aria-atomic="true">
+            <div className="refresh-progress">
               <div className="progress-doodle" aria-hidden="true">
                 <span className="doodle-orbit doodle-orbit-outer" />
                 <span className="doodle-orbit doodle-orbit-inner" />
@@ -226,13 +245,24 @@ function App() {
               </div>
               <div className="progress-copy">
                 <strong>Looking across the sources<span className="loading-ellipsis"><i>.</i><i>.</i><i>.</i></span></strong>
-                <span>Checking {sources.filter((source) => source.enabled).length} sites · {checkedSources} finished · {Math.floor(elapsedSeconds / 60)}:{String(elapsedSeconds % 60).padStart(2, "0")} elapsed</span>
-                <span className="progress-hint">This may take a little while. Please wait; results will appear when checks finish.</span>
+                <span role="status" aria-live="polite" aria-atomic="true">
+                  {sourceCounts.total
+                    ? `Checking ${sourceCounts.autoChecked} auto-check sites of ${sourceCounts.total} listed · ${checkedSources} finished`
+                    : "Loading the source list"}
+                </span>
+                <span className="progress-timer" aria-hidden="true">
+                  {Math.floor(elapsedSeconds / 60)}:{String(elapsedSeconds % 60).padStart(2, "0")} elapsed
+                </span>
+                <span className="progress-hint">
+                  {sourceCounts.referenceOnly
+                    ? `${sourceCounts.referenceOnly} reference-only sites are listed below but are not fetched automatically.`
+                    : "This may take a little while. Results will appear when checks finish."}
+                </span>
               </div>
               <div className="progress-track" aria-hidden="true"><span /></div>
             </div>
           )}
-          {error && <div className="message error-message" role="alert">{error}</div>}
+          {error && <div className="message error-message" role="alert" aria-live="assertive">{error}</div>}
           {notice && (
             <div className="message success-message" role="status" aria-live="polite">
               <Check size={15} />
@@ -257,10 +287,12 @@ function App() {
         <section className="source-strip">
           <div className="source-copy"><span className="eyebrow"><span className="eyebrow-line" /> A NOTE ON SOURCES</span><p>Only technology-related listings belong here. We check event details against their sources and remove listings that do not meet that bar.</p></div>
           <div className="source-check"><Clock3 size={15} /><span>LAST CHECKED</span><strong>{checkedAt(lastRefresh)}</strong></div>
-          <a className="source-link" href="#sources">OUR SOURCES <ArrowDownRight size={14} /></a>
+          <nav aria-label="Page sections">
+            <a className="source-link" href="#sources">OUR SOURCES <ArrowDownRight size={14} /></a>
+          </nav>
         </section>
         <section className="source-list" id="sources">
-          <div className="source-list-heading"><span className="eyebrow"><span className="eyebrow-line" /> TECH EVENT SOURCE INDEX</span><span>{sources.length} SITES · {sources.filter((source) => source.enabled).length} AUTO-CHECKED</span></div>
+          <div className="source-list-heading"><span className="eyebrow"><span className="eyebrow-line" /> TECH EVENT SOURCE INDEX</span><span>{sourceCounts.total} SITES · {sourceCounts.autoChecked} AUTO-CHECKED · {sourceCounts.referenceOnly} REFERENCE ONLY</span></div>
           <div className="source-list-items">
             {sources.map((source) => (
               <a className="source-item" key={source.id} href={source.url} target="_blank" rel="noreferrer">
