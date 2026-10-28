@@ -46,6 +46,9 @@ class Connector(Protocol):
 
 def load_sources(path: Path = SOURCES_PATH) -> list[Source]:
     data = json.loads(path.read_text(encoding="utf-8"))
+    if path == SOURCES_PATH:
+        reference_path = SOURCES_PATH.with_name("reference_sources.json")
+        data.extend(json.loads(reference_path.read_text(encoding="utf-8")))
     return [Source(**item) for item in data]
 
 

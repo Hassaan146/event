@@ -1,7 +1,5 @@
-import json
-
 from app.extract import _date_from_text
-from app.sources import EventCardParser, SOURCES_PATH, load_sources
+from app.sources import EventCardParser, load_sources
 
 
 def test_event_directory_parser_reads_public_cards_and_ignores_ads():
@@ -31,14 +29,16 @@ def test_registry_has_at_least_ten_active_sites_and_pauses_blocked_source():
     active = [source for source in sources if source.enabled]
     ids = [source.id for source in sources]
     assert len(active) >= 10
+    assert len(sources) >= 60
     assert len(ids) == len(set(ids))
     assert any(source.kind == "event-directory" for source in active)
     paused = next(source for source in sources if source.id == "pakevents-islamabad")
     assert paused.enabled is False
     assert paused.note and "403" in paused.note
+    assert any(source.url == "https://hack-scout-delta.vercel.app/events" for source in sources)
+    assert any(source.url == "https://startups.pasha.org.pk/" for source in sources)
 
 
 def test_all_registered_enabled_feeds_have_unique_hosts_and_urls():
-    data = json.loads(SOURCES_PATH.read_text(encoding="utf-8"))
-    active = [item for item in data if item["enabled"]]
-    assert len({item["url"] for item in active}) == len(active)
+    sources = load_sources()
+    assert len({source.url for source in sources}) == len(sources)

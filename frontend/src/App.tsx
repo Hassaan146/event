@@ -255,18 +255,18 @@ function App() {
         </section>
 
         <section className="source-strip">
-          <div className="source-copy"><span className="eyebrow"><span className="eyebrow-line" /> A NOTE ON SOURCES</span><p>We gather from secondary community and publisher sources. Details stay grounded in what they say — when something’s unclear, we’ll say so.</p></div>
+          <div className="source-copy"><span className="eyebrow"><span className="eyebrow-line" /> A NOTE ON SOURCES</span><p>Only technology-related listings belong here. We check event details against their sources and remove listings that do not meet that bar.</p></div>
           <div className="source-check"><Clock3 size={15} /><span>LAST CHECKED</span><strong>{checkedAt(lastRefresh)}</strong></div>
           <a className="source-link" href="#sources">OUR SOURCES <ArrowDownRight size={14} /></a>
         </section>
         <section className="source-list" id="sources">
-          <div className="source-list-heading"><span className="eyebrow"><span className="eyebrow-line" /> CURATED SECONDARY SOURCES</span><span>{sources.length} SOURCES CONFIGURED</span></div>
+          <div className="source-list-heading"><span className="eyebrow"><span className="eyebrow-line" /> TECH EVENT SOURCE INDEX</span><span>{sources.length} SITES · {sources.filter((source) => source.enabled).length} AUTO-CHECKED</span></div>
           <div className="source-list-items">
             {sources.map((source) => (
               <a className="source-item" key={source.id} href={source.url} target="_blank" rel="noreferrer">
-                <span className={!source.enabled || source.last_error ? "source-state failed" : source.last_checked ? "source-state" : "source-state pending"} />
+                <span className={!source.enabled ? "source-state pending" : source.last_error ? "source-state failed" : source.last_checked ? "source-state" : "source-state pending"} />
                 <span className="source-item-name">{source.name}</span>
-                <span className="source-item-meta" title={source.last_error ?? source.note ?? ""}>{!source.enabled ? source.note ?? "Disabled" : source.last_error ? `Issue: ${source.last_error}` : source.last_checked ? `Checked ${checkedAt(source.last_checked)}` : "Not checked yet"}</span>
+                <span className="source-item-meta" title={source.last_error ?? source.note ?? ""}>{!source.enabled ? "Reference only" : source.last_error ? `Issue: ${source.last_error}` : source.last_checked ? `Checked ${checkedAt(source.last_checked)}` : "Not checked yet"}</span>
                 <ExternalLink size={12} />
               </a>
             ))}
