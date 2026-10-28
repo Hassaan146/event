@@ -103,5 +103,104 @@
     "publisher": "PkEvents",
     "enabled": false,
     "note": "Temporarily disabled: this runtime receives HTTP 403 from the site. No access restrictions are bypassed."
+  },
+  {
+    "id": "pkevnts-reference",
+    "name": "PkEvents · Local events and activities",
+    "kind": "paused",
+    "url": "https://pkevnts.com/",
+    "publisher": "PkEvents",
+    "enabled": false,
+    "note": "Reference listing source: manually reviewed, not auto-crawled in this build until a compliant feed or public directory endpoint is verified."
+  },
+  {
+    "id": "pakistan-hackathons-reference",
+    "name": "Pakistan Hackathons · Coding competitions and build challenges",
+    "kind": "paused",
+    "url": "https://pakistanhackathons.com/",
+    "publisher": "Pakistan Hackathons",
+    "enabled": false,
+    "note": "Reference hackathon directory: useful for national-level event discovery, but the site does not expose a stable feed for automated ingestion in this project."
+  },
+  {
+    "id": "the-grind-reference",
+    "name": "The Grind · Student events and competitions",
+    "kind": "paused",
+    "url": "https://www.grind.pk/",
+    "publisher": "The Grind",
+    "enabled": false,
+    "note": "Reference source: currently treated as a secondary community directory rather than a machine-readable event feed."
+  },
+  {
+    "id": "eventbrite-tech-pakistan",
+    "name": "Eventbrite · Pakistan tech events",
+    "kind": "paused",
+    "url": "https://www.eventbrite.com/d/pakistan--events/technology/",
+    "publisher": "Eventbrite",
+    "enabled": false,
+    "note": "Reference discovery platform: not a direct RSS feed for this app; manual filtering and eligibility checks are still required."
+  },
+  {
+    "id": "meetup-pakistan-tech",
+    "name": "Meetup · Pakistan developer groups",
+    "kind": "paused",
+    "url": "https://www.meetup.com/",
+    "publisher": "Meetup",
+    "enabled": false,
+    "note": "Reference discovery platform: used for community/event discovery but excluded from automatic scraping because it requires location- and group-specific access patterns."
+  },
+  {
+    "id": "devpost-hackathons",
+    "name": "Devpost · International hackathons and challenges",
+    "kind": "paused",
+    "url": "https://devpost.com/",
+    "publisher": "Devpost",
+    "enabled": false,
+    "note": "Reference platform for open hackathons; only events that explicitly accept Pakistan-based participants should be considered."
+  },
+  {
+    "id": "luma-community-events",
+    "name": "Luma · Community events and tech meetups",
+    "kind": "paused",
+    "url": "https://lu.ma/",
+    "publisher": "Luma",
+    "enabled": false,
+    "note": "Reference source: used to spot community meetups and founder gatherings, but it is not scraped automatically without explicit consent and a verified feed."
+  },
+  {
+    "id": "ignite-events-reference",
+    "name": "Ignite · National innovation and technology events",
+    "kind": "paused",
+    "url": "https://ignite.org.pk/events/",
+    "publisher": "Ignite",
+    "enabled": false,
+    "note": "Reference ecosystem source: check for official innovation programs and technology events, but it is not auto-indexed in the current feed-based build."
+  },
+  {
+    "id": "gdg-pakistan-reference",
+    "name": "GDG Pakistan · Developer communities and workshops",
+    "kind": "paused",
+    "url": "https://gdgpakistan.com/",
+    "publisher": "Google Developer Groups Pakistan",
+    "enabled": false,
+    "note": "Reference community source: includes local developer groups and workshops; requires direct review before it is added to automated fetches."
+  },
+  {
+    "id": "mlh-hackathons-reference",
+    "name": "MLH · Student and community hackathons",
+    "kind": "paused",
+    "url": "https://mlh.io/",
+    "publisher": "Major League Hacking",
+    "enabled": false,
+    "note": "Reference platform for hackathons and student developer competitions; filter for Pakistan-eligible events before listing them."
+  },
+  {
+    "id": "nic-islamabad-reference",
+    "name": "NIC Islamabad · Startup and entrepreneurship events",
+    "kind": "paused",
+    "url": "https://nicislamabad.pk/",
+    "publisher": "National Incubation Center Islamabad",
+    "enabled": false,
+    "note": "Reference source for Islamabad startup and entrepreneurship events; no automated feed is currently used for ingestion."
   }
-]
+] 

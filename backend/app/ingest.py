@@ -6,7 +6,47 @@ from .db import connection, utc_now
 from .extract import enrich_with_groq, is_future_event, is_relevant_to_islamabad, local_extract
 from .sources import CONNECTORS, Source
 
-CATEGORY_TERMS = ("hackathon", "meetup", "workshop", "technology event", "tech event", "conference", "summit")
+EVENT_TERMS = (
+    "hackathon",
+    "meetup",
+    "workshop",
+    "conference",
+    "summit",
+    "competition",
+    "challenge",
+    "bootcamp",
+    "networking event",
+)
+
+TECH_TERMS = (
+    "tech",
+    "technology",
+    "software",
+    "developer",
+    "coding",
+    "programming",
+    "artificial intelligence",
+    "machine learning",
+    "cybersecurity",
+    "data science",
+    "robotics",
+    "blockchain",
+    "startup",
+    "digital",
+    "computer science",
+    "information technology",
+    "web development",
+    "app development",
+)
+
+
+def _is_tech_event(text: str) -> bool:
+    lowered = text.casefold()
+    has_event_term = any(term in lowered for term in EVENT_TERMS)
+    has_tech_term = "hackathon" in lowered or any(term in lowered for term in TECH_TERMS) or bool(
+        re.search(r"\bAI\b", text, re.IGNORECASE)
+    )
+    return has_event_term and has_tech_term
 
 
 def _plain_text(value: str) -> str:
@@ -44,7 +84,7 @@ async def refresh_sources(sources: list[Source]) -> dict[str, int | list[dict[st
                 title = _plain_text(item.title)
                 summary = _plain_text(item.summary)
                 text = f"{title}\n{summary}".strip()
-                if not any(term in text.lower() for term in CATEGORY_TERMS):
+                if not _is_tech_event(text):
                     continue
                 facts = local_extract(title, summary)
                 facts = await enrich_with_groq(title, summary, facts)

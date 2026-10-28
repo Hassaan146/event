@@ -54,11 +54,31 @@ def local_extract(title: str, text: str) -> dict[str, Any]:
     category = None
     if "hackathon" in lowered:
         category = "Hackathon"
-    elif "workshop" in lowered or "bootcamp" in lowered:
-        category = "Workshop"
     elif "meetup" in lowered:
-        category = "Meetup"
-    elif any(term in lowered for term in ("tech event", "technology event", "conference", "summit")):
+        category = "Tech meetup"
+    elif "workshop" in lowered or "bootcamp" in lowered:
+        category = "Tech workshop"
+    elif any(term in lowered for term in ("conference", "summit")):
+        category = "Tech conference"
+    elif "startup" in lowered or "innovation" in lowered:
+        category = "Startup event"
+    elif any(
+        term in lowered
+        for term in (
+            "technology",
+            "tech",
+            "software",
+            "developer",
+            "coding",
+            "programming",
+            "artificial intelligence",
+            "machine learning",
+            "cybersecurity",
+            "data science",
+            "robotics",
+            "blockchain",
+        )
+    ) or re.search(r"\bAI\b", combined, re.IGNORECASE):
         category = "Tech event"
 
     registration = "unknown"
@@ -112,7 +132,7 @@ async def enrich_with_groq(title: str, text: str, extracted: dict[str, Any]) -> 
     schema = {
         "event_date": "ISO date YYYY-MM-DD or null",
         "end_date": "ISO date YYYY-MM-DD or null",
-        "category": "Hackathon, Meetup, Tech event, Workshop, or null",
+        "category": "Hackathon, Tech meetup, Tech workshop, Tech conference, Startup event, Tech event, or null",
         "venue": "venue or city mentioned, or null",
         "format": "Online, In-person, Hybrid, or null",
         "eligibility": "eligibility exactly summarized from text, or null",
@@ -163,6 +183,15 @@ async def enrich_with_groq(title: str, text: str, extracted: dict[str, Any]) -> 
         value = result.get(field)
         quote = evidence.get(field)
         if not value or not isinstance(quote, str) or quote not in f"{title}\n{text}":
+            continue
+        if field == "category" and value not in (
+            "Hackathon",
+            "Tech meetup",
+            "Tech workshop",
+            "Tech conference",
+            "Startup event",
+            "Tech event",
+        ):
             continue
         if field in ("event_date", "end_date"):
             if not isinstance(value, str) or _date_from_text(quote) != value:

@@ -54,11 +54,13 @@ The skills from [Hassaan146/claude-skills](https://github.com/Hassaan146/claude-
 
 The enabled registry contains TechJuice, ProPakistani, Dawn, Express Tribune, The News International, Daily Times, Pakistan Observer, Startup Pakistan, Islamabad Scene, Geo News, Daily Pakistan, and the AllEvents Islamabad directory. RSS publishers are queried through their feeds; AllEvents uses its public Islamabad listing page. The RSS publishers are broad news/community sources, so event coverage can be sparse; the title/summary filter only keeps event-like entries with an extractable future date and Islamabad/online scope.
 
+Additional secondary-source references are kept in the registry as paused/manual review entries so the project remains transparent about its sourcing. These include PkEvents, Pakistan Hackathons, The Grind, Eventbrite Pakistan, Meetup, Devpost, Luma, Ignite, GDG Pakistan, MLH, and NIC Islamabad. They are tracked as reference sites for discovery workflows, but they are not pushed into automated scraping unless a public feed or directory endpoint is verified against the app's robots, rate-limit, and source-quality rules.
+
 Each refresh checks the source host's `robots.txt`, uses a descriptive user agent, fetches sources sequentially, observes published crawl delays (with a two-second minimum per host), and applies a response-size limit. A source whose robots rules disallow access is skipped. Follow each publisher's terms and feed guidance before adding it. Captured feed/listing text is retained as provenance for each event.
 
 The publisher feeds are search leads, not independently verified event facts. The app links to the secondary-source item. It does not follow result links or contact organizers. If a date or other detail is not in the captured text, it remains unknown rather than being guessed. Check the linked source before relying on an event listing.
 
-PkEvents' Islamabad page was reviewed but is paused in the registry because the app's fetch environment receives HTTP 403; the app does not bypass this. The supplied Hack Scout name did not resolve to a verifiable public event directory URL, and The Grind site currently describes a coworking business rather than an events listing source, so neither is crawled.
+PkEvents' Islamabad page was reviewed but is paused in the registry because the app's fetch environment receives HTTP 403; the app does not bypass this. The referenced Hack Scout URL did not resolve to a verified public event directory during review, and The Grind is tracked as a reference-only source rather than an auto-crawled feed. All new additions remain behind the same compliance gate: manual review, secondary-source compliance, and no organizer outreach or unsupported scraping.
 
 ## Tests
 

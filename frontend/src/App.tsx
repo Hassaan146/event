@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowDownRight, ArrowUpRight, CalendarDays, Check, ChevronDown, Clock3, ExternalLink, MapPin, Radio, RefreshCw, Search, Users, Wifi } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowDownRight, ArrowUpRight, CalendarDays, Check, ChevronDown, Clock3, ExternalLink, MapPin, Radio, RefreshCw, Search, Sparkles, Users, Wifi } from "lucide-react";
 
 type EventItem = {
   id: string;
@@ -29,7 +29,14 @@ type SourceItem = {
 };
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
-const categories = ["All events", "Hackathon", "Meetup", "Tech event", "Workshop"];
+const categories = [
+  { label: "All tech events", value: "" },
+  { label: "Hackathons", value: "Hackathon" },
+  { label: "Tech meetups", value: "Tech meetup" },
+  { label: "Tech workshops", value: "Tech workshop" },
+  { label: "Tech conferences", value: "Tech conference" },
+  { label: "Startup events", value: "Startup event" },
+];
 const humanDate = (value: string | null) =>
   value
     ? new Intl.DateTimeFormat("en-PK", { day: "numeric", month: "short", year: "numeric" }).format(new Date(`${value}T00:00:00`))
@@ -40,18 +47,22 @@ const checkedAt = (value: string | null) =>
 function App() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [sources, setSources] = useState<SourceItem[]>([]);
-  const [category, setCategory] = useState("All events");
+  const [category, setCategory] = useState("");
   const [query, setQuery] = useState("");
   const [registration, setRegistration] = useState("all");
   const [lastRefresh, setLastRefresh] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [checkedSources, setCheckedSources] = useState(0);
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
+  const refreshStartedAt = useRef(0);
+  const sourceCheckBaseline = useRef(new Map<string, string | null>());
 
   const loadEvents = useCallback(async () => {
     const params = new URLSearchParams();
     if (query.trim()) params.set("q", query.trim());
-    if (category !== "All events") params.set("category", category);
+    if (category) params.set("category", category);
     if (registration !== "all") params.set("registration", registration);
     const response = await fetch(`${API_URL}/api/events?${params}`);
     if (!response.ok) throw new Error("Could not load events from the local API.");
@@ -82,7 +93,42 @@ function App() {
     };
   }, [loadEvents, loadSources]);
 
+  useEffect(() => {
+    if (!busy) return;
+    const timer = window.setInterval(() => {
+      setElapsedSeconds(Math.floor((Date.now() - refreshStartedAt.current) / 1000));
+    }, 1000);
+    const progressTimer = window.setInterval(() => {
+      void fetch(`${API_URL}/api/sources`)
+        .then((response) => {
+          if (!response.ok) throw new Error("Could not update source progress.");
+          return response.json();
+        })
+        .then((latestSources: SourceItem[]) => {
+          setSources(latestSources);
+          const completed = latestSources.filter(
+            (source) =>
+              source.enabled &&
+              source.last_checked &&
+              source.last_checked !== sourceCheckBaseline.current.get(source.id),
+          ).length;
+          setCheckedSources(completed);
+        })
+        .catch(() => {
+          // The refresh request remains authoritative if a progress poll fails.
+        });
+    }, 2000);
+    return () => {
+      window.clearInterval(timer);
+      window.clearInterval(progressTimer);
+    };
+  }, [busy]);
+
   const refresh = async () => {
+    refreshStartedAt.current = Date.now();
+    sourceCheckBaseline.current = new Map(sources.map((source) => [source.id, source.last_checked]));
+    setElapsedSeconds(0);
+    setCheckedSources(0);
     setBusy(true);
     setError("");
     setNotice("");
@@ -91,8 +137,18 @@ function App() {
       if (!response.ok) throw new Error("Source refresh failed.");
       const result = await response.json();
       await Promise.all([loadEvents(), loadSources()]);
-      setNotice(`${result.events_saved} future event${result.events_saved === 1 ? "" : "s"} updated from ${result.feeds_found} feed items.`);
-      if (result.errors.length) setError(`${result.errors.length} source${result.errors.length === 1 ? "" : "s"} could not be refreshed. Review source status below.`);
+      const activeSourceCount = sources.filter((source) => source.enabled).length;
+      const checkedCount = Math.max(0, activeSourceCount - result.errors.length);
+      setCheckedSources(activeSourceCount);
+      setNotice(
+        result.errors.length
+          ? `Finished checking ${checkedCount} of ${activeSourceCount} sources. ${result.errors.length} need attention. ${result.events_saved} future event listing${result.events_saved === 1 ? "" : "s"} updated.`
+          : `Done — checked all ${activeSourceCount} sources and updated ${result.events_saved} future event listing${result.events_saved === 1 ? "" : "s"}. You can view them below.`,
+      );
+      if (result.errors.length) setError("Some sources could not be checked. Their status is shown below.");
+      window.requestAnimationFrame(() => {
+        document.getElementById("event-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "The refresh could not be completed.");
     } finally {
@@ -151,8 +207,8 @@ function App() {
           </div>
 
           <div className="toolbar">
-            <div className="category-tabs" role="tablist" aria-label="Filter by event type">
-              {categories.map((item) => <button key={item} role="tab" aria-selected={category === item} className={category === item ? "tab active" : "tab"} onClick={() => setCategory(item)}>{item}</button>)}
+              <div className="category-tabs" role="tablist" aria-label="Filter by technology event type">
+                {categories.map((item) => <button key={item.label} role="tab" aria-selected={category === item.value} className={category === item.value ? "tab active" : "tab"} onClick={() => setCategory(item.value)}>{item.label}</button>)}
             </div>
             <div className="filters">
               <label className="searchbox"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search events" aria-label="Search events" /></label>
@@ -160,14 +216,36 @@ function App() {
             </div>
           </div>
 
-          {error && <div className="message error-message">{error}</div>}
-          {notice && <div className="message success-message"><Check size={15} />{notice}</div>}
+          {busy && (
+            <div className="refresh-progress" role="status" aria-live="polite" aria-atomic="true">
+              <div className="progress-doodle" aria-hidden="true">
+                <span className="doodle-orbit doodle-orbit-outer" />
+                <span className="doodle-orbit doodle-orbit-inner" />
+                <span className="doodle-center"><Radio size={18} /></span>
+                <Sparkles className="doodle-spark" size={16} />
+              </div>
+              <div className="progress-copy">
+                <strong>Looking across the sources<span className="loading-ellipsis"><i>.</i><i>.</i><i>.</i></span></strong>
+                <span>Checking {sources.filter((source) => source.enabled).length} sites · {checkedSources} finished · {Math.floor(elapsedSeconds / 60)}:{String(elapsedSeconds % 60).padStart(2, "0")} elapsed</span>
+                <span className="progress-hint">This may take a little while. Please wait; results will appear when checks finish.</span>
+              </div>
+              <div className="progress-track" aria-hidden="true"><span /></div>
+            </div>
+          )}
+          {error && <div className="message error-message" role="alert">{error}</div>}
+          {notice && (
+            <div className="message success-message" role="status" aria-live="polite">
+              <Check size={15} />
+              <span>{notice}</span>
+              <button onClick={() => document.getElementById("event-results")?.scrollIntoView({ behavior: "smooth", block: "start" })}>View results <ArrowDownRight size={13} /></button>
+            </div>
+          )}
           {events.length ? (
-            <div className="event-grid">
+            <div className="event-grid" id="event-results">
               {events.map((event, index) => <EventCard key={event.id} event={event} index={index} />)}
             </div>
           ) : (
-            <div className="empty-state">
+            <div className="empty-state" id="event-results">
               <div className="empty-symbol">∅</div>
               <h3>{error ? "Can’t reach the event desk." : "A little quiet, for now."}</h3>
               <p>{error ? "Start the FastAPI server and try again." : "No matching future listings yet. Refresh the curated sources or try another filter."}</p>

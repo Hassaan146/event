@@ -12,7 +12,7 @@ class FixtureConnector:
         registration = "Registration is closed." if self.close_hackathons else "Registration is open."
         return [
             FeedItem(
-                title="Islamabad hackathon",
+                title="Islamabad AI hackathon",
                 url="https://news.google.com/item/open",
                 summary=f"{registration} Teams of 3-5 members. National event on December 12, 2099. Online.",
                 published_at=None,
@@ -20,7 +20,7 @@ class FixtureConnector:
             FeedItem(
                 title="Islamabad workshop",
                 url="https://news.google.com/item/unknown",
-                summary="A community workshop on December 13, 2099.",
+                summary="A software engineering community workshop on December 13, 2099.",
                 published_at=None,
             ),
             FeedItem(
@@ -30,7 +30,7 @@ class FixtureConnector:
                 published_at=None,
             ),
             FeedItem(
-                title="Islamabad hackathon!",
+                title="Islamabad AI hackathon!",
                 url="https://news.google.com/item/open-duplicate",
                 summary=f"{registration} Teams of 3-5 members. National event on December 12, 2099. Online.",
                 published_at=None,
@@ -51,6 +51,12 @@ class FixtureConnector:
                 title="Virtual technology workshop",
                 url="https://news.google.com/item/online-unclear",
                 summary="Online workshop on December 16, 2099.",
+                published_at=None,
+            ),
+            FeedItem(
+                title="Islamabad baking workshop",
+                url="https://news.google.com/item/non-tech",
+                summary="A cooking workshop on December 17, 2099.",
                 published_at=None,
             ),
         ]
@@ -97,4 +103,4 @@ def test_refresh_persists_and_filters_future_events(tmp_path, monkeypatch):
         assert client.post("/api/refresh").status_code == 200
         remaining = client.get("/api/events").json()["events"]
         assert len(remaining) == 1
-        assert remaining[0]["category"] == "Workshop"
+        assert remaining[0]["category"] == "Tech workshop"
