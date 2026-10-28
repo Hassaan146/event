@@ -32,17 +32,17 @@
 - Consumes: user-provided source leads and existing `Source` registry entries.
 - Produces: candidate records with canonical URL, source focus, evidence URL, robots/access result, and proposed crawler-supported discovery URL.
 
-- [ ] **Step 1: Build candidate inventory**
+- [x] **Step 1: Build candidate inventory**
   Research the user-provided organizations/platforms and additional Pakistan-focused tech-event publishers. Include Islamabad/ICT university, community, government, incubator, event directory, and tech-media sources; include global platforms only where they expose Pakistan-relevant public discovery.
-- [ ] **Step 2: Verify evidence and source URLs**
+- [x] **Step 2: Verify evidence and source URLs**
   For each candidate, visit its canonical site and identify a public event/feed page. Record supporting URLs and mark uncertain or unverified claims as such; do not treat search snippets as proof of crawler compatibility.
-- [ ] **Step 3: Preflight public access**
+- [x] **Step 3: Preflight public access**
   Check candidate URLs and robots guidance using the project user-agent and non-invasive requests. Classify redirect, denied, unavailable, unsupported, or reachable without evading controls.
-- [ ] **Step 4: Add only preflight-eligible candidates**
+- [x] **Step 4: Add only preflight-eligible candidates**
   Add candidates with a supported public feed or discovery page to the existing JSON registries using current `Source` field conventions. Do not yet remove candidates solely because a live response contains zero events.
-- [ ] **Step 5: Validate registry structure**
+- [x] **Step 5: Validate registry structure**
   Run `cd backend && .venv/bin/python -m pytest -q tests/test_sources.py` and `cd backend && .venv/bin/ruff check app tests`. Resolve duplicate IDs, URLs, or malformed registry data before live crawling.
-- [ ] **Step 6: Commit research and candidate registry**
+- [x] **Step 6: Commit research and candidate registry**
   ```bash
   git add docs/source-research/pakistan-tech-event-sources.md backend/sources.json backend/reference_sources.json backend/tests/test_sources.py
   git commit -m "research: add vetted Pakistan tech event sources"
@@ -61,17 +61,17 @@
 - Consumes: eligible source registry and `POST /api/refresh`.
 - Produces: per-source actual crawl outcomes and a final active registry containing no sources that failed access, robots, redirect, or supported-content checks.
 
-- [ ] **Step 1: Run every eligible source**
+- [x] **Step 1: Run every eligible source**
   Execute one full backend refresh with the candidate registry and retain the complete source-status response. Reconcile expected eligible source IDs against attempted/status IDs.
-- [ ] **Step 2: Classify each result**
+- [x] **Step 2: Classify each result**
   Keep sources with event results and sources that completed a valid empty crawl. Exclude robots-denied, unreachable, unsafe-redirect, unsupported, or parse-failing candidates; record exact outcome and timestamp. Do not label empty as a failure.
-- [ ] **Step 3: Add regression assertions**
+- [x] **Step 3: Add regression assertions**
   Update registry tests to assert unique IDs/URLs, all active entries eligible, and that removed failed candidates are absent. Update API tests only if registry behavior changes.
-- [ ] **Step 4: Rerun tests and lint**
+- [x] **Step 4: Rerun tests and lint**
   Run `cd backend && .venv/bin/python -m pytest -q && .venv/bin/ruff check app tests`.
-- [ ] **Step 5: Run the final registry**
+- [x] **Step 5: Run the final registry**
   Refresh once more after exclusions. Verify every remaining source was attempted and no remaining source reports a failure or skip. Summarize event-bearing, valid-empty, and excluded sources separately.
-- [ ] **Step 6: Commit and publish branch**
+- [x] **Step 6: Commit and publish branch**
   ```bash
   git diff --check
   git add backend/sources.json backend/reference_sources.json backend/tests/test_sources.py backend/tests/test_api.py docs/source-research/pakistan-tech-event-sources.md
