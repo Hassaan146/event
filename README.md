@@ -46,6 +46,10 @@ The SPA proxies `/api` requests to the local API. For a different API address, s
 
 Copy `backend/.env.example` to `backend/.env` and set `GROQ_API_KEY`. The key is read only by the backend and is never sent to the browser. `GROQ_MODEL` is optional and defaults to `llama-3.3-70b-versatile`. Without a key, conservative local extraction is used.
 
+## Project skills
+
+The skills from [Hassaan146/claude-skills](https://github.com/Hassaan146/claude-skills) are installed in `.claude/skills/` for this repository. This includes all 438 top-level skill folders and their supporting assets, copied from upstream revision `033736c5ab973f55b783cd1251571e176195f949`. To refresh them, copy the source repository's top-level skill directories into `.claude/skills/`; review upstream changes before replacing the checked-in copies.
+
 ## Sources, compliance, and data quality
 
 Edit `backend/sources.json` to add or remove RSS feeds. Only add feeds from secondary Pakistani publishers, event/community roundups, or aggregators—not organizer websites or event-hosting platforms. Configure RSS feed URLs, not broad website crawl targets.
