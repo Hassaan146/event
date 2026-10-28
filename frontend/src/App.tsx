@@ -244,10 +244,10 @@ function App() {
                 <Sparkles className="doodle-spark" size={16} />
               </div>
               <div className="progress-copy">
-                <strong>Looking across the sources<span className="loading-ellipsis"><i>.</i><i>.</i><i>.</i></span></strong>
+                <strong>Checking tech sources<span className="loading-ellipsis"><i>.</i><i>.</i><i>.</i></span></strong>
                 <span role="status" aria-live="polite" aria-atomic="true">
                   {sourceCounts.total
-                    ? `Checking ${sourceCounts.autoChecked} auto-check sites of ${sourceCounts.total} listed · ${checkedSources} finished`
+                    ? `${checkedSources} of ${sourceCounts.autoChecked} auto-check sites finished · ${sourceCounts.referenceOnly} of ${sourceCounts.total} sites are reference-only`
                     : "Loading the source list"}
                 </span>
                 <span className="progress-timer" aria-hidden="true">
@@ -255,7 +255,7 @@ function App() {
                 </span>
                 <span className="progress-hint">
                   {sourceCounts.referenceOnly
-                    ? `${sourceCounts.referenceOnly} reference-only sites are listed below but are not fetched automatically.`
+                    ? "Reference-only sites have no enabled, verified fetch connector yet, so they are listed for manual lookup instead of being fetched."
                     : "This may take a little while. Results will appear when checks finish."}
                 </span>
               </div>
