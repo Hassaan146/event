@@ -54,8 +54,24 @@ def initialize_database() -> None:
                 publisher TEXT NOT NULL,
                 enabled INTEGER NOT NULL,
                 last_checked TEXT,
-                last_error TEXT
+                last_error TEXT,
+                crawl_policy TEXT NOT NULL DEFAULT 'eligible',
+                crawl_status TEXT NOT NULL DEFAULT 'pending',
+                last_attempted TEXT,
+                items_found INTEGER NOT NULL DEFAULT 0,
+                events_saved INTEGER NOT NULL DEFAULT 0
             )
             """
         )
+        columns = {row["name"] for row in conn.execute("PRAGMA table_info(sources)")}
+        migrations = {
+            "crawl_policy": "TEXT NOT NULL DEFAULT 'eligible'",
+            "crawl_status": "TEXT NOT NULL DEFAULT 'pending'",
+            "last_attempted": "TEXT",
+            "items_found": "INTEGER NOT NULL DEFAULT 0",
+            "events_saved": "INTEGER NOT NULL DEFAULT 0",
+        }
+        for name, definition in migrations.items():
+            if name not in columns:
+                conn.execute(f"ALTER TABLE sources ADD COLUMN {name} {definition}")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_events_date ON events(event_date)")

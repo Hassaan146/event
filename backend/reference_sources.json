@@ -2,325 +2,361 @@
   {
     "id": "hackscout",
     "name": "HackScout · Hackathons, workshops and meetups",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://hack-scout-delta.vercel.app/events",
     "publisher": "HackScout",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "pakistanistartup",
     "name": "Pakistan Startup · Founder events and startup community",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://pakistanistartup.com/",
     "publisher": "Pakistan Startup",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "pasha-startup-hub",
     "name": "PASHA Startup Hub · Startup and ICT industry events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://startups.pasha.org.pk/",
     "publisher": "PASHA Startup Hub",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "linkedin-events",
     "name": "LinkedIn Events · Professional tech events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.linkedin.com/events/",
     "publisher": "LinkedIn",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched; access is location- and account-dependent."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "facebook-events",
     "name": "Facebook Events · Local tech meetups",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.facebook.com/events/",
     "publisher": "Facebook",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched; access is location- and account-dependent."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "10times",
     "name": "10times · Technology expos and conferences",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://10times.com/",
     "publisher": "10times",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "conference-alerts",
     "name": "Conference Alerts · Academic technology conferences",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://conferencealerts.com/",
     "publisher": "Conference Alerts",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "wikicfp",
     "name": "WikiCFP · Computer science calls for papers",
-    "kind": "paused",
+    "kind": "discover",
     "url": "http://www.wikicfp.com/",
     "publisher": "WikiCFP",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "call4paper",
     "name": "Call4Paper · Conference submissions",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.call4paper.com/",
     "publisher": "Call4Paper",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "sessionize",
     "name": "Sessionize · Developer conferences and speaker events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://sessionize.com/",
     "publisher": "Sessionize",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "indus-ai-week",
     "name": "Indus AI Week · AI activities and techathons",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.indusai.gov.pk/",
     "publisher": "Indus AI Week",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "pasha",
     "name": "P@SHA · Software industry events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.pasha.org.pk/",
     "publisher": "P@SHA",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "pseb-techdestination",
     "name": "PSEB / TechDestination · Pakistan IT industry events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://techdestination.com/",
     "publisher": "PSEB",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "punjab-it-board",
     "name": "Punjab IT Board · Technology programs and competitions",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://pitb.gov.pk/",
     "publisher": "Punjab IT Board",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "pkcert-events",
     "name": "National CERT Pakistan · Cybersecurity events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://pkcert.gov.pk/events.asp",
     "publisher": "National CERT Pakistan",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "digitalpakistan",
     "name": "DigitalPakistan.io · Digital economy ecosystem",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://digitalpakistan.io/ecosystem",
     "publisher": "DigitalPakistan.io",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "gdg-community",
     "name": "Google Developer Groups · Local developer events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://gdg.community.dev/",
     "publisher": "Google Developer Groups",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "ieee",
     "name": "IEEE · Engineering and technical conferences",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.ieee.org/",
     "publisher": "IEEE",
-    "enabled": false,
-    "note": "User-supplied reference. Find and verify Pakistan section event pages before automated ingestion."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "acm",
     "name": "ACM · Computer science conferences and chapters",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.acm.org/",
     "publisher": "ACM",
-    "enabled": false,
-    "note": "User-supplied reference. Find and verify Pakistan chapter event pages before automated ingestion."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "aws-user-groups",
     "name": "AWS User Groups · Developer and cloud events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://aws.amazon.com/developer/community/usergroups/",
     "publisher": "Amazon Web Services",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a Pakistan group event feed is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "microsoft-reactor",
     "name": "Microsoft Reactor · Developer workshops",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://developer.microsoft.com/en-us/reactor/",
     "publisher": "Microsoft",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until Pakistan-eligible events can be reliably filtered."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "cisco-events",
     "name": "Cisco Events · Networking and cybersecurity",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.cisco.com/",
     "publisher": "Cisco",
-    "enabled": false,
-    "note": "User-supplied reference. Find and verify Pakistan event pages before automated ingestion."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "owasp-events",
     "name": "OWASP Events · Application security meetups",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://owasp.org/events/",
     "publisher": "OWASP",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a Pakistan chapter feed is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "nust",
     "name": "NUST · University technology events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://nust.edu.pk/",
     "publisher": "NUST",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable event connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "nascon",
     "name": "FAST-NUCES / NaSCon · Student technology events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://nascon.com.pk/",
     "publisher": "FAST-NUCES / NaSCon",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable event connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "lums",
     "name": "LUMS · University technology events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://lums.edu.pk/",
     "publisher": "LUMS",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable event connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "comsats",
     "name": "COMSATS University · Technology and computing events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.comsats.edu.pk/",
     "publisher": "COMSATS University",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable event connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "giki",
     "name": "GIKI · University technology events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://giki.edu.pk/",
     "publisher": "GIKI",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable event connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "air-university",
     "name": "Air University · Technology and computing events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.au.edu.pk/",
     "publisher": "Air University",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable event connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "itu-lahore",
     "name": "IT University Lahore · Technology events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://itu.edu.pk/",
     "publisher": "IT University Lahore",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable event connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "uet-lahore",
     "name": "UET Lahore · Engineering and technology events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://uet.edu.pk/",
     "publisher": "UET Lahore",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable event connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "iba-karachi",
     "name": "IBA Karachi · University technology events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://iba.edu.pk/",
     "publisher": "IBA Karachi",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable event connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "ned-university",
     "name": "NED University · Engineering and technology events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.neduet.edu.pk/",
     "publisher": "NED University",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable event connector is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "techmag",
     "name": "TechMag Pakistan · Technology community coverage",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://techmag.pk/",
     "publisher": "TechMag Pakistan",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until a compliant, stable feed is verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "startup-grind",
     "name": "Startup Grind · Founder events and networking",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://www.startupgrind.com/",
     "publisher": "Startup Grind",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until Pakistan chapter event feeds are verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   },
   {
     "id": "tie-global",
     "name": "TiE Global · Entrepreneur and founder events",
-    "kind": "paused",
+    "kind": "discover",
     "url": "https://tie.org/",
     "publisher": "TiE",
-    "enabled": false,
-    "note": "User-supplied reference. Not automatically fetched until Pakistan chapter event feeds are verified."
+    "enabled": true,
+    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
   }
 ]

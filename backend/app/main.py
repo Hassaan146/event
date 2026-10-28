@@ -70,7 +70,8 @@ def list_events(
 def list_sources() -> list[dict[str, Any]]:
     with connection() as conn:
         rows = conn.execute(
-            "SELECT id, name, url, publisher, enabled, last_checked, last_error FROM sources ORDER BY name"
+            "SELECT id, name, url, publisher, enabled, last_checked, last_error, crawl_policy, "
+            "crawl_status, last_attempted, items_found, events_saved FROM sources ORDER BY name"
         ).fetchall()
     status_by_id = {row["id"]: dict(row) for row in rows}
     result = []
@@ -83,8 +84,13 @@ def list_sources() -> list[dict[str, Any]]:
                 "url": source.url,
                 "publisher": source.publisher,
                 "enabled": source.enabled,
+                "crawl_policy": source.crawl_policy,
                 "note": source.note,
                 "last_checked": status.get("last_checked"),
+                "last_attempted": status.get("last_attempted"),
+                "crawl_status": status.get("crawl_status", "pending"),
+                "items_found": status.get("items_found", 0),
+                "events_saved": status.get("events_saved", 0),
                 "last_error": status.get("last_error"),
             }
         )
