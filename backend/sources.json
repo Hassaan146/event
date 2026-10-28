@@ -99,6 +99,16 @@
     "crawl_policy": "eligible"
   },
   {
+    "id": "phoneworld-pakistan",
+    "name": "PhoneWorld · Pakistan technology news",
+    "kind": "discover",
+    "url": "https://www.phoneworld.com.pk/",
+    "publisher": "PhoneWorld",
+    "enabled": true,
+    "note": "Pakistan technology news publisher; event announcements may appear among public articles.",
+    "crawl_policy": "eligible"
+  },
+  {
     "id": "pakevents-islamabad",
     "name": "PakEvents · Islamabad listings",
     "kind": "discover",
@@ -142,7 +152,7 @@
     "id": "meetup-pakistan-tech",
     "name": "Meetup · Pakistan developer groups",
     "kind": "discover",
-    "url": "https://www.meetup.com/",
+    "url": "https://www.meetup.com/find/?location=pk--Islamabad&source=EVENTS",
     "publisher": "Meetup",
     "enabled": true,
     "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",

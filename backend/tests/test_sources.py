@@ -74,13 +74,14 @@ def test_registry_attempts_all_indexed_sources_without_bypassing_blocks():
         "aws-user-groups",
         "owasp-events",
         "uet-lahore",
+        "pkcert-events",
     }
-    assert len(active) == 41
-    assert len(sources) == 41
+    assert len(active) == 56
+    assert len(sources) == 56
     assert len(ids) == len(set(ids))
     assert not any(source.kind == "event-directory" for source in active)
     assert all(source.crawl_policy == "eligible" for source in sources)
-    assert sum(source.kind == "discover" for source in sources) == 30
+    assert sum(source.kind == "discover" for source in sources) == 45
     assert not removed_ids.intersection(ids)
 
 
@@ -92,9 +93,40 @@ def test_all_registered_enabled_feeds_have_unique_hosts_and_urls():
 def test_all_indexed_sources_have_an_explicit_crawl_policy_and_discovery_connector():
     sources = load_sources()
 
-    assert len(sources) == 41
+    assert len(sources) == 56
     assert all(source.crawl_policy == "eligible" for source in sources)
-    assert sum(source.kind == "discover" for source in sources) == 30
+    assert sum(source.kind == "discover" for source in sources) == 45
+
+
+def test_researched_pakistan_event_sources_use_verified_public_pages():
+    sources = {source.id: source for source in load_sources()}
+    expected_urls = {
+        "bano-qabil-hackathon": "https://banoqabil.org/hackathon",
+        "code-for-pakistan-events": "https://codeforpakistan.org/events",
+        "aspire-pakistan": "https://aspirepk.org/",
+        "lablab-ai-hackathons": "https://lablab.ai/",
+        "dev-events-pakistan": "https://dev.events/AS/PK",
+        "founder-institute-islamabad": "https://fi.co/events/islamabad",
+        "indus-ai-week": "https://indusai.sindh.gov.pk/",
+        "ai-tinkerers-lahore": "https://lahore.aitinkerers.org/",
+        "ai-tinkerers-karachi": "https://karachi.aitinkerers.org/",
+        "friends-of-figma-lahore": "https://friends.figma.com/lahore/",
+        "nic-karachi-events": "https://nickarachi.com/",
+        "phoneworld-pakistan": "https://www.phoneworld.com.pk/",
+        "eventbrite-islamabad-tech": (
+            "https://www.eventbrite.com/d/pakistan--islamabad/technology/"
+        ),
+        "nic-islamabad-events": "https://nicislamabad.com/events/",
+        "nutech-events": "https://nutech.edu.pk/events/",
+        "invest2innovate": "https://invest2innovate.com/",
+        "the-nest-io": "https://thenest.io/",
+    }
+
+    assert {source_id: sources[source_id].url for source_id in expected_urls} == expected_urls
+    assert all(sources[source_id].crawl_policy == "eligible" for source_id in expected_urls)
+    assert sources["meetup-pakistan-tech"].url == (
+        "https://www.meetup.com/find/?location=pk--Islamabad&source=EVENTS"
+    )
 
 
 def test_discovery_parser_extracts_declared_same_host_feed_and_jsonld_event():

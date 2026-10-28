@@ -41,9 +41,9 @@
   },
   {
     "id": "indus-ai-week",
-    "name": "Indus AI Week · AI activities and techathons",
+    "name": "Indus AI Week Sindh · AI activities and techathons",
     "kind": "discover",
-    "url": "https://www.indusai.gov.pk/",
+    "url": "https://indusai.sindh.gov.pk/",
     "publisher": "Indus AI Week",
     "enabled": true,
     "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
@@ -55,16 +55,6 @@
     "kind": "discover",
     "url": "https://techdestination.com/",
     "publisher": "PSEB",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
-    "id": "pkcert-events",
-    "name": "National CERT Pakistan · Cybersecurity events",
-    "kind": "discover",
-    "url": "https://pkcert.gov.pk/events.asp",
-    "publisher": "National CERT Pakistan",
     "enabled": true,
     "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
     "crawl_policy": "eligible"
@@ -123,7 +113,7 @@
     "id": "nust",
     "name": "NUST · University technology events",
     "kind": "discover",
-    "url": "https://nust.edu.pk/",
+    "url": "https://nust.edu.pk/events/",
     "publisher": "NUST",
     "enabled": true,
     "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
@@ -227,6 +217,156 @@
     "publisher": "TiE",
     "enabled": true,
     "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "bano-qabil-hackathon",
+    "name": "Bano Qabil · AI Hackathon Pakistan",
+    "kind": "discover",
+    "url": "https://banoqabil.org/hackathon",
+    "publisher": "Bano Qabil / Alkhidmat",
+    "enabled": true,
+    "note": "Public national hackathon page; live HTML check returned no parser items.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "code-for-pakistan-events",
+    "name": "Code for Pakistan · Civic-tech events",
+    "kind": "discover",
+    "url": "https://codeforpakistan.org/events",
+    "publisher": "Code for Pakistan",
+    "enabled": true,
+    "note": "Public event archive; current listing had no crawler-extracted items.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "aspire-pakistan",
+    "name": "ASPIRE Pakistan · National Idea Bank and startup events",
+    "kind": "discover",
+    "url": "https://aspirepk.org/",
+    "publisher": "ASPIRE Pakistan",
+    "enabled": true,
+    "note": "Public Pakistan innovation and entrepreneurship programs.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "lablab-ai-hackathons",
+    "name": "lablab.ai · Global AI hackathons",
+    "kind": "discover",
+    "url": "https://lablab.ai/",
+    "publisher": "lablab.ai",
+    "enabled": true,
+    "note": "Public AI hackathon platform; homepage advertises upcoming events but the current parser found no items.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "dev-events-pakistan",
+    "name": "dev.events · Pakistan developer events",
+    "kind": "discover",
+    "url": "https://dev.events/AS/PK",
+    "publisher": "dev.events",
+    "enabled": true,
+    "note": "Public Pakistan developer conference and event listing.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "founder-institute-islamabad",
+    "name": "Founder Institute · Islamabad and online events",
+    "kind": "discover",
+    "url": "https://fi.co/events/islamabad",
+    "publisher": "Founder Institute",
+    "enabled": true,
+    "note": "Public Islamabad event search; also lists online events.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "ai-tinkerers-lahore",
+    "name": "AI Tinkerers Lahore · AI builder meetups",
+    "kind": "discover",
+    "url": "https://lahore.aitinkerers.org/",
+    "publisher": "AI Tinkerers",
+    "enabled": true,
+    "note": "Public local AI meetup page; current parser found no listing items.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "ai-tinkerers-karachi",
+    "name": "AI Tinkerers Karachi · AI builder meetups",
+    "kind": "discover",
+    "url": "https://karachi.aitinkerers.org/",
+    "publisher": "AI Tinkerers",
+    "enabled": true,
+    "note": "Public local AI meetup page; current parser found no listing items.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "friends-of-figma-lahore",
+    "name": "Friends of Figma Lahore · Design and AI events",
+    "kind": "discover",
+    "url": "https://friends.figma.com/lahore/",
+    "publisher": "Friends of Figma",
+    "enabled": true,
+    "note": "Public Lahore community page; current parser found no listing items.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "nic-karachi-events",
+    "name": "NIC Karachi · Startup events and programs",
+    "kind": "discover",
+    "url": "https://nickarachi.com/",
+    "publisher": "National Incubation Center Karachi",
+    "enabled": true,
+    "note": "Public startup-incubation and event updates.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "eventbrite-islamabad-tech",
+    "name": "Eventbrite · Islamabad technology events",
+    "kind": "discover",
+    "url": "https://www.eventbrite.com/d/pakistan--islamabad/technology/",
+    "publisher": "Eventbrite",
+    "enabled": true,
+    "note": "Public Islamabad technology browse page; results may include unrelated listings.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "nic-islamabad-events",
+    "name": "NIC Islamabad · Public events and programs",
+    "kind": "discover",
+    "url": "https://nicislamabad.com/events/",
+    "publisher": "National Incubation Center Islamabad",
+    "enabled": true,
+    "note": "Public events route; page is client-rendered and current parser found no items.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "nutech-events",
+    "name": "NUTECH · Islamabad technology university events",
+    "kind": "discover",
+    "url": "https://nutech.edu.pk/events/",
+    "publisher": "National University of Technology",
+    "enabled": true,
+    "note": "Public university events archive; current parser found no items.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "invest2innovate",
+    "name": "Invest2Innovate · Pakistan startup ecosystem",
+    "kind": "discover",
+    "url": "https://invest2innovate.com/",
+    "publisher": "Invest2Innovate",
+    "enabled": true,
+    "note": "Canonical public startup ecosystem and event-news publisher.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "the-nest-io",
+    "name": "The Nest I/O · Pakistan startup community",
+    "kind": "discover",
+    "url": "https://thenest.io/",
+    "publisher": "The Nest I/O",
+    "enabled": true,
+    "note": "Canonical public startup incubator site; current parser found no event items.",
     "crawl_policy": "eligible"
   }
 ]
