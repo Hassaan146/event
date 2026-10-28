@@ -1,0 +1,71 @@
+# Islamabad Tech Events
+
+A local-first event finder for hackathons, meetups, tech events, and workshops relevant to Islamabad/ICT. The app uses a React + TypeScript SPA, a FastAPI backend, and SQLite. It does not contact event organizers or crawl event-hosting sites for discovery.
+
+## What it does
+
+- Reads curated secondary-source RSS feeds; the starter registry uses TechJuice and ProPakistani, Pakistani tech publishers.
+- Keeps source connectors modular so additional secondary publishers and community feeds can be added in `backend/sources.json`.
+- Only displays events with a future event date. An unclear registration state is shown as **Unknown — verify on source**; closed registration is excluded.
+- Requires explicit Islamabad/ICT evidence for in-person events, and Islamabad location or broad national/open-access evidence for online events.
+- Shows only details supported by captured source text. Missing details stay marked as unknown.
+- Optionally uses Groq for structured extraction. Each extracted value must include an exact supporting quote from the captured feed text or it is discarded.
+- Stores events and refresh timestamps locally in SQLite. No paid services are required.
+- Does not require sign-in; there is no user account or Google authentication flow in this version.
+
+## Requirements
+
+- Python 3.10+
+- Node.js 20.19+ or 22.12+
+
+## Run locally
+
+1. Start the API:
+
+   ```sh
+   cd backend
+   python -m venv .venv
+   . .venv/bin/activate
+   pip install -r requirements.txt
+   uvicorn app.main:app --reload
+   ```
+
+2. In another terminal, start the SPA:
+
+   ```sh
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+3. Open the Vite URL (normally `http://localhost:5173`). Use **Refresh sources** to run discovery. The API is at `http://localhost:8000`; interactive API docs are at `/docs`.
+
+The SPA proxies `/api` requests to the local API. For a different API address, set `VITE_API_URL` before starting/building the frontend.
+
+## Optional Groq extraction
+
+Copy `backend/.env.example` to `backend/.env` and set `GROQ_API_KEY`. The key is read only by the backend and is never sent to the browser. `GROQ_MODEL` is optional and defaults to `llama-3.3-70b-versatile`. Without a key, conservative local extraction is used.
+
+## Sources, compliance, and data quality
+
+Edit `backend/sources.json` to add or remove RSS feeds. Only add feeds from secondary Pakistani publishers, event/community roundups, or aggregators—not organizer websites or event-hosting platforms. Configure RSS feed URLs, not broad website crawl targets.
+
+Each refresh checks the source host's `robots.txt`, uses a descriptive user agent, fetches feeds sequentially, and enforces a per-host delay. A source whose robots rules disallow access is skipped. The starter registry uses the publishers' public RSS feeds; Google News RSS is not included because its current robots rules disallow these feed paths. Follow each publisher's terms and feed guidance before adding it. Feed text is retained as provenance for every event.
+
+The publisher feeds are search leads, not independently verified event facts. The app links to the secondary-source item. It does not follow result links or contact organizers. If a date or other detail is not in the captured text, it remains unknown rather than being guessed. Check the linked source before relying on an event listing.
+
+## Tests
+
+```sh
+cd backend
+python -m pip install -r requirements.txt
+pytest
+ruff check app tests
+```
+
+```sh
+cd frontend
+npm install
+npm run lint
+npm run build
+```

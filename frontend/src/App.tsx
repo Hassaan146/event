@@ -1,0 +1,229 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ArrowDownRight, ArrowUpRight, CalendarDays, Check, ChevronDown, Clock3, ExternalLink, MapPin, Radio, RefreshCw, Search, Users, Wifi } from "lucide-react";
+
+type EventItem = {
+  id: string;
+  title: string;
+  event_date: string | null;
+  end_date: string | null;
+  category: string | null;
+  venue: string | null;
+  format: string | null;
+  eligibility: string | null;
+  team_size: string | null;
+  level: string | null;
+  registration_status: "open" | "unknown";
+  source_name: string;
+  source_url: string;
+  last_checked: string;
+};
+
+type SourceItem = {
+  id: string;
+  name: string;
+  url: string;
+  last_checked: string | null;
+  last_error: string | null;
+};
+
+const API_URL = import.meta.env.VITE_API_URL ?? "";
+const categories = ["All events", "Hackathon", "Meetup", "Tech event", "Workshop"];
+const humanDate = (value: string | null) =>
+  value
+    ? new Intl.DateTimeFormat("en-PK", { day: "numeric", month: "short", year: "numeric" }).format(new Date(`${value}T00:00:00`))
+    : "Date not confirmed";
+const checkedAt = (value: string | null) =>
+  value ? new Intl.DateTimeFormat("en-PK", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value)) : "Not checked yet";
+
+function App() {
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [sources, setSources] = useState<SourceItem[]>([]);
+  const [category, setCategory] = useState("All events");
+  const [query, setQuery] = useState("");
+  const [registration, setRegistration] = useState("all");
+  const [lastRefresh, setLastRefresh] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
+
+  const loadEvents = useCallback(async () => {
+    const params = new URLSearchParams();
+    if (query.trim()) params.set("q", query.trim());
+    if (category !== "All events") params.set("category", category);
+    if (registration !== "all") params.set("registration", registration);
+    const response = await fetch(`${API_URL}/api/events?${params}`);
+    if (!response.ok) throw new Error("Could not load events from the local API.");
+    const data = await response.json();
+    setEvents(data.events);
+    setLastRefresh(data.last_refresh);
+  }, [category, query, registration]);
+
+  const loadSources = useCallback(async () => {
+    const response = await fetch(`${API_URL}/api/sources`);
+    if (!response.ok) throw new Error("Could not load configured sources.");
+    setSources(await response.json());
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    const run = async () => {
+      try {
+        setError("");
+        await Promise.all([loadEvents(), loadSources()]);
+      } catch (reason) {
+        if (active) setError(reason instanceof Error ? reason.message : "The API could not be reached.");
+      }
+    };
+    void run();
+    return () => {
+      active = false;
+    };
+  }, [loadEvents, loadSources]);
+
+  const refresh = async () => {
+    setBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const response = await fetch(`${API_URL}/api/refresh`, { method: "POST" });
+      if (!response.ok) throw new Error("Source refresh failed.");
+      const result = await response.json();
+      await Promise.all([loadEvents(), loadSources()]);
+      setNotice(`${result.events_saved} future event${result.events_saved === 1 ? "" : "s"} updated from ${result.feeds_found} feed items.`);
+      if (result.errors.length) setError(`${result.errors.length} source${result.errors.length === 1 ? "" : "s"} could not be refreshed. Review source status below.`);
+    } catch (reason) {
+      setError(reason instanceof Error ? reason.message : "The refresh could not be completed.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const stats = useMemo(() => ({
+    total: events.length,
+    open: events.filter((event) => event.registration_status === "open").length,
+    unknown: events.filter((event) => event.registration_status === "unknown").length,
+  }), [events]);
+
+  return (
+    <div className="app-shell">
+      <header className="topbar">
+        <a className="brand" href="#" aria-label="Fieldnotes home">
+          <span className="brand-mark"><span /></span>
+          <span>fieldnotes<span className="brand-dot">.</span></span>
+        </a>
+        <div className="topbar-right">
+          <span className="location-pill"><span className="pulse" /> ISLAMABAD / ICT</span>
+          <button className="refresh-button" onClick={refresh} disabled={busy}>
+            <RefreshCw size={15} className={busy ? "spin" : ""} />
+            {busy ? "Checking sources" : "Refresh sources"}
+          </button>
+        </div>
+      </header>
+
+      <main>
+        <section className="hero">
+          <div className="hero-copy">
+            <div className="eyebrow"><span className="eyebrow-line" /> A FIELD GUIDE FOR THE CURIOUS</div>
+            <h1>Make room<br />for <em>what’s next.</em></h1>
+            <p className="hero-description">The moments worth showing up for, gathered from around Islamabad’s tech community.</p>
+            <div className="hero-meta"><span><Radio size={14} /> COMMUNITY-SOURCED</span><span className="meta-divider" /><span>NO NOISE, JUST SIGNAL</span></div>
+          </div>
+          <div className="hero-art" aria-hidden="true">
+            <div className="orbit orbit-one" /><div className="orbit orbit-two" />
+            <div className="sun"><span /></div>
+            <div className="art-label label-top">33.6844° N</div>
+            <div className="art-label label-bottom">73.0479° E <span>·</span> ISLAMABAD</div>
+            <div className="spark spark-one">✳</div><div className="spark spark-two">✳</div>
+          </div>
+          <div className="hero-index">01 <span>/</span> 04</div>
+        </section>
+
+        <section className="events-section">
+          <div className="section-heading">
+            <div><div className="eyebrow section-eyebrow"><span className="eyebrow-line" /> THE UPCOMING</div><h2>Find your next thing<span>.</span></h2></div>
+            <div className="stats">
+              <div><strong>{String(stats.total).padStart(2, "0")}</strong><span>LISTED</span></div>
+              <div><strong>{String(stats.open).padStart(2, "0")}</strong><span>REGISTRATION OPEN</span></div>
+              <div><strong>{String(stats.unknown).padStart(2, "0")}</strong><span>VERIFY FIRST</span></div>
+            </div>
+          </div>
+
+          <div className="toolbar">
+            <div className="category-tabs" role="tablist" aria-label="Filter by event type">
+              {categories.map((item) => <button key={item} role="tab" aria-selected={category === item} className={category === item ? "tab active" : "tab"} onClick={() => setCategory(item)}>{item}</button>)}
+            </div>
+            <div className="filters">
+              <label className="searchbox"><Search size={16} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search events" aria-label="Search events" /></label>
+              <label className="selectbox"><select value={registration} onChange={(event) => setRegistration(event.target.value)} aria-label="Filter registration status"><option value="all">Any status</option><option value="open">Registration open</option><option value="unknown">Verify on source</option></select><ChevronDown size={14} /></label>
+            </div>
+          </div>
+
+          {error && <div className="message error-message">{error}</div>}
+          {notice && <div className="message success-message"><Check size={15} />{notice}</div>}
+          {events.length ? (
+            <div className="event-grid">
+              {events.map((event, index) => <EventCard key={event.id} event={event} index={index} />)}
+            </div>
+          ) : (
+            <div className="empty-state">
+              <div className="empty-symbol">∅</div>
+              <h3>{error ? "Can’t reach the event desk." : "A little quiet, for now."}</h3>
+              <p>{error ? "Start the FastAPI server and try again." : "No matching future listings yet. Refresh the curated sources or try another filter."}</p>
+              <button onClick={refresh} disabled={busy} className="text-button">Check the sources <ArrowUpRight size={15} /></button>
+            </div>
+          )}
+        </section>
+
+        <section className="source-strip">
+          <div className="source-copy"><span className="eyebrow"><span className="eyebrow-line" /> A NOTE ON SOURCES</span><p>We gather from secondary community and publisher sources. Details stay grounded in what they say — when something’s unclear, we’ll say so.</p></div>
+          <div className="source-check"><Clock3 size={15} /><span>LAST CHECKED</span><strong>{checkedAt(lastRefresh)}</strong></div>
+          <a className="source-link" href="#sources">OUR SOURCES <ArrowDownRight size={14} /></a>
+        </section>
+        <section className="source-list" id="sources">
+          <div className="source-list-heading"><span className="eyebrow"><span className="eyebrow-line" /> CURATED SECONDARY SOURCES</span><span>{sources.length} FEEDS CONFIGURED</span></div>
+          <div className="source-list-items">
+            {sources.map((source) => (
+              <a className="source-item" key={source.id} href={source.url} target="_blank" rel="noreferrer">
+                <span className={source.last_error ? "source-state failed" : source.last_checked ? "source-state" : "source-state pending"} />
+                <span className="source-item-name">{source.name}</span>
+                <span className="source-item-meta" title={source.last_error ?? ""}>{source.last_error ? `Issue: ${source.last_error}` : source.last_checked ? `Checked ${checkedAt(source.last_checked)}` : "Not checked yet"}</span>
+                <ExternalLink size={12} />
+              </a>
+            ))}
+          </div>
+        </section>
+      </main>
+      <footer><span>FIELDNOTES <span className="brand-dot">·</span> ISLAMABAD</span><span>GOOD THINGS HAPPEN WHEN YOU SHOW UP.</span><span>© 2026</span></footer>
+    </div>
+  );
+}
+
+function EventCard({ event, index }: { event: EventItem; index: number }) {
+  const date = new Date(`${event.event_date}T00:00:00`);
+  const month = new Intl.DateTimeFormat("en", { month: "short" }).format(date).toUpperCase();
+  const day = new Intl.DateTimeFormat("en", { day: "2-digit" }).format(date);
+  return (
+    <article className={`event-card ${index === 0 ? "featured" : ""}`}>
+      <div className="card-topline"><span className="category-label">{event.category ?? "Tech gathering"}</span><span className={`registration ${event.registration_status}`}>{event.registration_status === "open" ? <><span className="status-dot" /> REGISTRATION OPEN</> : <>VERIFY ON SOURCE <ArrowUpRight size={11} /></>}</span></div>
+      <div className="card-main">
+        <div className="date-block"><strong>{day}</strong><span>{month}</span></div>
+        <div className="event-content">
+          <h3>{event.title}</h3>
+          <div className="event-details">
+            <span><CalendarDays size={13} />{humanDate(event.event_date)}</span>
+            <span>{event.format === "Online" ? <Wifi size={13} /> : <MapPin size={13} />}{event.format ?? event.venue ?? "Format / venue unknown"}</span>
+            {event.venue && event.format && <span><MapPin size={13} />{event.venue}</span>}
+          </div>
+        </div>
+      </div>
+      <div className="card-facts">
+        <div><span className="fact-label">WHO CAN JOIN</span><strong>{event.eligibility ?? "Eligibility not stated"}</strong></div>
+        <div><span className="fact-label">TEAM SIZE</span><strong><Users size={13} />{event.team_size ?? "Not stated"}</strong></div>
+        <div><span className="fact-label">SCOPE</span><strong>{event.level ?? "Not stated"}</strong></div>
+      </div>
+      <div className="card-footer"><span className="source-name">VIA <strong>{event.source_name}</strong></span><a href={event.source_url} target="_blank" rel="noreferrer">VIEW SOURCE <ExternalLink size={12} /></a></div>
+    </article>
+  );
+}
+
+export default App;

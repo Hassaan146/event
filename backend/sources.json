@@ -1,0 +1,18 @@
+[
+  {
+    "id": "techjuice-pakistan",
+    "name": "TechJuice · Pakistan tech news",
+    "kind": "rss",
+    "url": "https://www.techjuice.pk/feed/",
+    "publisher": "TechJuice",
+    "enabled": true
+  },
+  {
+    "id": "propakistani",
+    "name": "ProPakistani · Pakistan tech news",
+    "kind": "rss",
+    "url": "https://propakistani.pk/feed/",
+    "publisher": "ProPakistani",
+    "enabled": true
+  }
+]
