@@ -23,15 +23,36 @@ type SourceItem = {
   name: string;
   url: string;
   enabled: boolean;
+  crawl_policy: "eligible" | "review_required" | "disallowed";
+  crawl_status: "pending" | "success" | "empty" | "robots_denied" | "robots_unavailable" | "forbidden" | "login_required" | "unsupported" | "parse_error" | "error" | "review_required" | "disallowed";
   note: string | null;
   last_checked: string | null;
+  last_attempted: string | null;
+  items_found: number;
+  events_saved: number;
   last_error: string | null;
 };
 
 type RefreshResult = {
+  feeds_found: number;
   events_saved: number;
+  sources_attempted: number;
+  sources_succeeded: number;
+  sources_empty: number;
+  sources_skipped: number;
+  sources_failed: number;
   errors: { source: string; error: string }[];
 };
+
+class ApiUnavailableError extends Error {}
+
+async function requestApi(url: string, init?: RequestInit): Promise<Response> {
+  try {
+    return await fetch(url, init);
+  } catch {
+    throw new ApiUnavailableError("The local API could not be reached.");
+  }
+}
 
 const API_URL = import.meta.env.VITE_API_URL ?? "";
 const categories = [
@@ -60,16 +81,19 @@ function App() {
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [checkedSources, setCheckedSources] = useState(0);
   const [error, setError] = useState("");
+  const [apiUnavailable, setApiUnavailable] = useState(false);
   const [notice, setNotice] = useState("");
   const refreshStartedAt = useRef(0);
   const sourceCheckBaseline = useRef(new Map<string, string | null>());
 
   const sourceCounts = useMemo(() => {
-    const autoChecked = sources.filter((source) => source.enabled).length;
+    const eligible = sources.filter((source) => source.crawl_policy === "eligible").length;
     return {
       total: sources.length,
-      autoChecked,
-      referenceOnly: sources.length - autoChecked,
+      eligible,
+      checked: sources.filter((source) => source.last_attempted).length,
+      failed: sources.filter((source) => ["robots_denied", "robots_unavailable", "forbidden", "login_required", "unsupported", "parse_error", "error"].includes(source.crawl_status)).length,
+      skipped: sources.filter((source) => ["review_required", "disallowed"].includes(source.crawl_status)).length,
     };
   }, [sources]);
 
@@ -78,7 +102,7 @@ function App() {
     if (query.trim()) params.set("q", query.trim());
     if (category) params.set("category", category);
     if (registration !== "all") params.set("registration", registration);
-    const response = await fetch(`${API_URL}/api/events?${params}`);
+    const response = await requestApi(`${API_URL}/api/events?${params}`);
     if (!response.ok) throw new Error("Could not load events from the local API.");
     const data = await response.json();
     setEvents(data.events);
@@ -86,7 +110,7 @@ function App() {
   }, [category, query, registration]);
 
   const loadSources = useCallback(async (): Promise<SourceItem[]> => {
-    const response = await fetch(`${API_URL}/api/sources`);
+    const response = await requestApi(`${API_URL}/api/sources`);
     if (!response.ok) throw new Error("Could not load configured sources.");
     const latestSources: SourceItem[] = await response.json();
     setSources(latestSources);
@@ -100,7 +124,10 @@ function App() {
         setError("");
         await Promise.all([loadEvents(), loadSources()]);
       } catch (reason) {
-        if (active) setError(reason instanceof Error ? reason.message : "The API could not be reached.");
+        if (active) {
+          setError(reason instanceof Error ? reason.message : "The API could not be reached.");
+          setApiUnavailable(reason instanceof ApiUnavailableError);
+        }
       }
     };
     void run();
@@ -124,11 +151,11 @@ function App() {
           setSources(latestSources);
           const completed = latestSources.filter(
             (source) =>
-              source.enabled &&
-              source.last_checked &&
-              source.last_checked !== sourceCheckBaseline.current.get(source.id),
+              source.crawl_policy === "eligible" &&
+              source.last_attempted &&
+              source.last_attempted !== sourceCheckBaseline.current.get(source.id),
           ).length;
-          setCheckedSources(Math.min(completed, latestSources.filter((source) => source.enabled).length));
+          setCheckedSources(Math.min(completed, latestSources.filter((source) => source.crawl_policy === "eligible").length));
         })
         .catch(() => {
           // The refresh request remains authoritative if a progress poll fails.
@@ -141,34 +168,30 @@ function App() {
   }, [busy]);
 
   const refresh = async () => {
+    setError("");
+    setApiUnavailable(false);
+    setNotice("");
+    setCheckedSources(0);
+    sourceCheckBaseline.current = new Map(sources.map((source) => [source.id, source.last_attempted]));
     refreshStartedAt.current = Date.now();
     setElapsedSeconds(0);
-    setCheckedSources(0);
     setBusy(true);
-    setError("");
-    setNotice("");
     try {
       const baselineSources = await loadSources();
-      sourceCheckBaseline.current = new Map(baselineSources.map((source) => [source.id, source.last_checked]));
-      const response = await fetch(`${API_URL}/api/refresh`, { method: "POST" });
+      sourceCheckBaseline.current = new Map(baselineSources.map((source) => [source.id, source.last_attempted]));
+      const response = await requestApi(`${API_URL}/api/refresh`, { method: "POST" });
       if (!response.ok) throw new Error("Source refresh failed.");
       const result: RefreshResult = await response.json();
       const [, latestSources] = await Promise.all([loadEvents(), loadSources()]);
-      const activeSourceCount = latestSources.filter((source) => source.enabled).length;
-      const referenceOnlyCount = latestSources.length - activeSourceCount;
-      const checkedCount = Math.max(0, activeSourceCount - result.errors.length);
-      setCheckedSources(activeSourceCount);
-      setNotice(
-        result.errors.length
-          ? `Finished checking ${checkedCount} of ${activeSourceCount} auto-check sites (${latestSources.length} indexed; ${referenceOnlyCount} reference-only). ${result.errors.length} need attention. ${result.events_saved} future tech event listing${result.events_saved === 1 ? "" : "s"} updated.`
-          : `Done — checked all ${activeSourceCount} auto-check sites (${latestSources.length} indexed; ${referenceOnlyCount} reference-only) and updated ${result.events_saved} future tech event listing${result.events_saved === 1 ? "" : "s"}. You can view them below.`,
-      );
+      setCheckedSources(result.sources_attempted);
+      setNotice(`Refresh finished: attempted ${result.sources_attempted} of ${latestSources.length} sources; ${result.sources_succeeded} sources returned items (${result.feeds_found} parsed), ${result.sources_empty} had no event items, ${result.sources_failed} were blocked or failed, and ${result.sources_skipped} were skipped by policy. Saved ${result.events_saved} qualifying future tech event listing${result.events_saved === 1 ? "" : "s"}.`);
       if (result.errors.length) setError("Some sources could not be checked. Their status is shown below.");
       window.requestAnimationFrame(() => {
         document.getElementById("event-results")?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "The refresh could not be completed.");
+      setApiUnavailable(reason instanceof ApiUnavailableError);
     } finally {
       setBusy(false);
     }
@@ -247,16 +270,16 @@ function App() {
                 <strong>Checking tech sources<span className="loading-ellipsis"><i>.</i><i>.</i><i>.</i></span></strong>
                 <span role="status" aria-live="polite" aria-atomic="true">
                   {sourceCounts.total
-                    ? `${checkedSources} of ${sourceCounts.autoChecked} auto-check sites finished · ${sourceCounts.referenceOnly} of ${sourceCounts.total} sites are reference-only`
+                    ? `${checkedSources} of ${sourceCounts.eligible} eligible sources attempted · ${sourceCounts.total} sites indexed`
                     : "Loading the source list"}
                 </span>
                 <span className="progress-timer" aria-hidden="true">
                   {Math.floor(elapsedSeconds / 60)}:{String(elapsedSeconds % 60).padStart(2, "0")} elapsed
                 </span>
                 <span className="progress-hint">
-                  {sourceCounts.referenceOnly
-                    ? "Reference-only sites have no enabled, verified fetch connector yet, so they are listed for manual lookup instead of being fetched."
-                    : "This may take a little while. Results will appear when checks finish."}
+                  {sourceCounts.failed || sourceCounts.skipped
+                    ? `${sourceCounts.failed} blocked or failed and ${sourceCounts.skipped} skipped on the last refresh. Each site's reason appears below.`
+                    : "Each source is checked only when public access and its crawl policy allow it."}
                 </span>
               </div>
               <div className="progress-track" aria-hidden="true"><span /></div>
@@ -277,8 +300,8 @@ function App() {
           ) : (
             <div className="empty-state" id="event-results">
               <div className="empty-symbol">∅</div>
-              <h3>{error ? "Can’t reach the event desk." : "A little quiet, for now."}</h3>
-              <p>{error ? "Start the FastAPI server and try again." : "No matching future listings yet. Refresh the curated sources or try another filter."}</p>
+              <h3>{apiUnavailable ? "Can’t reach the event desk." : "A little quiet, for now."}</h3>
+              <p>{apiUnavailable ? "Start the FastAPI server and try again." : `No qualifying future listings. ${sourceCounts.checked} sources have a recorded refresh result; ${sourceCounts.failed} were blocked or failed and ${sourceCounts.skipped} were skipped.`}</p>
               <button onClick={refresh} disabled={busy} className="text-button">Check the sources <ArrowUpRight size={15} /></button>
             </div>
           )}
@@ -292,13 +315,13 @@ function App() {
           </nav>
         </section>
         <section className="source-list" id="sources">
-          <div className="source-list-heading"><span className="eyebrow"><span className="eyebrow-line" /> TECH EVENT SOURCE INDEX</span><span>{sourceCounts.total} SITES · {sourceCounts.autoChecked} AUTO-CHECKED · {sourceCounts.referenceOnly} REFERENCE ONLY</span></div>
+          <div className="source-list-heading"><span className="eyebrow"><span className="eyebrow-line" /> TECH EVENT SOURCE INDEX</span><span>{sourceCounts.total} INDEXED · {sourceCounts.eligible} ELIGIBLE · {sourceCounts.checked} CHECKED · {sourceCounts.failed} FAILED</span></div>
           <div className="source-list-items">
             {sources.map((source) => (
               <a className="source-item" key={source.id} href={source.url} target="_blank" rel="noreferrer">
-                <span className={!source.enabled ? "source-state pending" : source.last_error ? "source-state failed" : source.last_checked ? "source-state" : "source-state pending"} />
+                <span className={`source-state ${source.crawl_status === "success" ? "success" : source.crawl_status === "empty" ? "empty" : ["robots_denied", "robots_unavailable", "forbidden", "login_required", "unsupported", "parse_error", "error"].includes(source.crawl_status) ? "failed" : "pending"}`} />
                 <span className="source-item-name">{source.name}</span>
-                <span className="source-item-meta" title={source.last_error ?? source.note ?? ""}>{!source.enabled ? "Reference only" : source.last_error ? `Issue: ${source.last_error}` : source.last_checked ? `Checked ${checkedAt(source.last_checked)}` : "Not checked yet"}</span>
+                <span className="source-item-meta" title={source.last_error ?? source.note ?? ""}>{source.crawl_status === "pending" ? "Not checked yet" : source.crawl_status === "success" ? `${source.items_found} items · ${source.events_saved} saved · ${checkedAt(source.last_attempted)}` : source.crawl_status === "empty" ? `No event items · ${checkedAt(source.last_attempted)}` : `${source.crawl_status.replace(/_/g, " ")} · ${checkedAt(source.last_attempted)}`}</span>
                 <ExternalLink size={12} />
               </a>
             ))}
