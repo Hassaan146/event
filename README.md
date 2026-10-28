@@ -4,7 +4,7 @@ A local-first event finder for hackathons, meetups, tech events, and workshops r
 
 ## What it does
 
-- Reads curated secondary-source RSS feeds; the starter registry uses TechJuice and ProPakistani, Pakistani tech publishers.
+- Reads ten curated Pakistani publisher/community RSS feeds plus AllEvents' Islamabad listings. Only event-like items with explicit date/location evidence are retained.
 - Keeps source connectors modular so additional secondary publishers and community feeds can be added in `backend/sources.json`.
 - Only displays events with a future event date. An unclear registration state is shown as **Unknown — verify on source**; closed registration is excluded.
 - Requires explicit Islamabad/ICT evidence for in-person events, and Islamabad location or broad national/open-access evidence for online events.
@@ -52,11 +52,13 @@ The skills from [Hassaan146/claude-skills](https://github.com/Hassaan146/claude-
 
 ## Sources, compliance, and data quality
 
-Edit `backend/sources.json` to add or remove RSS feeds. Only add feeds from secondary Pakistani publishers, event/community roundups, or aggregators—not organizer websites or event-hosting platforms. Configure RSS feed URLs, not broad website crawl targets.
+The enabled registry contains TechJuice, ProPakistani, Dawn, Express Tribune, The News International, Daily Times, Pakistan Observer, Startup Pakistan, Islamabad Scene, Geo News, Daily Pakistan, and the AllEvents Islamabad directory. RSS publishers are queried through their feeds; AllEvents uses its public Islamabad listing page. The RSS publishers are broad news/community sources, so event coverage can be sparse; the title/summary filter only keeps event-like entries with an extractable future date and Islamabad/online scope.
 
-Each refresh checks the source host's `robots.txt`, uses a descriptive user agent, fetches feeds sequentially, and enforces a per-host delay. A source whose robots rules disallow access is skipped. The starter registry uses the publishers' public RSS feeds; Google News RSS is not included because its current robots rules disallow these feed paths. Follow each publisher's terms and feed guidance before adding it. Feed text is retained as provenance for every event.
+Each refresh checks the source host's `robots.txt`, uses a descriptive user agent, fetches sources sequentially, observes published crawl delays (with a two-second minimum per host), and applies a response-size limit. A source whose robots rules disallow access is skipped. Follow each publisher's terms and feed guidance before adding it. Captured feed/listing text is retained as provenance for each event.
 
 The publisher feeds are search leads, not independently verified event facts. The app links to the secondary-source item. It does not follow result links or contact organizers. If a date or other detail is not in the captured text, it remains unknown rather than being guessed. Check the linked source before relying on an event listing.
+
+PkEvents' Islamabad page was reviewed but is paused in the registry because the app's fetch environment receives HTTP 403; the app does not bypass this. The supplied Hack Scout name did not resolve to a verifiable public event directory URL, and The Grind site currently describes a coworking business rather than an events listing source, so neither is crawled.
 
 ## Tests
 

@@ -14,5 +14,94 @@
     "url": "https://propakistani.pk/feed/",
     "publisher": "ProPakistani",
     "enabled": true
+  },
+  {
+    "id": "dawn",
+    "name": "Dawn · Pakistan news",
+    "kind": "rss",
+    "url": "https://www.dawn.com/feeds/home",
+    "publisher": "Dawn",
+    "enabled": true
+  },
+  {
+    "id": "express-tribune-tech",
+    "name": "Express Tribune · Technology",
+    "kind": "rss",
+    "url": "https://tribune.com.pk/feed/technology",
+    "publisher": "Express Tribune",
+    "enabled": true
+  },
+  {
+    "id": "the-news-tech",
+    "name": "The News International · Technology",
+    "kind": "rss",
+    "url": "https://www.thenews.com.pk/rss/1/7",
+    "publisher": "The News International",
+    "enabled": true
+  },
+  {
+    "id": "daily-times",
+    "name": "Daily Times · Pakistan news",
+    "kind": "rss",
+    "url": "https://dailytimes.com.pk/feed/",
+    "publisher": "Daily Times",
+    "enabled": true
+  },
+  {
+    "id": "pakistan-observer",
+    "name": "Pakistan Observer · Pakistan news",
+    "kind": "rss",
+    "url": "https://pakobserver.net/feed/",
+    "publisher": "Pakistan Observer",
+    "enabled": true
+  },
+  {
+    "id": "startup-pakistan",
+    "name": "Startup Pakistan · Startup news",
+    "kind": "rss",
+    "url": "https://startup.pk/feed/",
+    "publisher": "Startup Pakistan",
+    "enabled": true
+  },
+  {
+    "id": "islamabad-scene",
+    "name": "Islamabad Scene · Local events and news",
+    "kind": "rss",
+    "url": "https://www.islamabadscene.com/feed/",
+    "publisher": "Islamabad Scene",
+    "enabled": true
+  },
+  {
+    "id": "geo-news",
+    "name": "Geo News · Pakistan news",
+    "kind": "rss",
+    "url": "https://www.geo.tv/rss/1/1",
+    "publisher": "Geo News",
+    "enabled": true
+  },
+  {
+    "id": "daily-pakistan",
+    "name": "Daily Pakistan · Pakistan news",
+    "kind": "rss",
+    "url": "https://en.dailypakistan.com.pk/feed",
+    "publisher": "Daily Pakistan",
+    "enabled": true
+  },
+  {
+    "id": "allevents-islamabad",
+    "name": "AllEvents · Islamabad public listings",
+    "kind": "event-directory",
+    "url": "https://allevents.in/islamabad/all",
+    "publisher": "AllEvents",
+    "enabled": true
+  },
+  {
+    "id": "pakevents-islamabad",
+    "name": "PakEvents · Islamabad listings",
+    "kind": "paused",
+    "url": "https://pakevents.pk/islamabad",
+    "publisher": "PkEvents",
+    "enabled": false,
+    "note": "Temporarily disabled: this runtime receives HTTP 403 from the site. No access restrictions are bypassed."
   }
 ]

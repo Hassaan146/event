@@ -83,6 +83,7 @@ def list_sources() -> list[dict[str, Any]]:
                 "url": source.url,
                 "publisher": source.publisher,
                 "enabled": source.enabled,
+                "note": source.note,
                 "last_checked": status.get("last_checked"),
                 "last_error": status.get("last_error"),
             }

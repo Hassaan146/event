@@ -22,6 +22,8 @@ type SourceItem = {
   id: string;
   name: string;
   url: string;
+  enabled: boolean;
+  note: string | null;
   last_checked: string | null;
   last_error: string | null;
 };
@@ -180,13 +182,13 @@ function App() {
           <a className="source-link" href="#sources">OUR SOURCES <ArrowDownRight size={14} /></a>
         </section>
         <section className="source-list" id="sources">
-          <div className="source-list-heading"><span className="eyebrow"><span className="eyebrow-line" /> CURATED SECONDARY SOURCES</span><span>{sources.length} FEEDS CONFIGURED</span></div>
+          <div className="source-list-heading"><span className="eyebrow"><span className="eyebrow-line" /> CURATED SECONDARY SOURCES</span><span>{sources.length} SOURCES CONFIGURED</span></div>
           <div className="source-list-items">
             {sources.map((source) => (
               <a className="source-item" key={source.id} href={source.url} target="_blank" rel="noreferrer">
-                <span className={source.last_error ? "source-state failed" : source.last_checked ? "source-state" : "source-state pending"} />
+                <span className={!source.enabled || source.last_error ? "source-state failed" : source.last_checked ? "source-state" : "source-state pending"} />
                 <span className="source-item-name">{source.name}</span>
-                <span className="source-item-meta" title={source.last_error ?? ""}>{source.last_error ? `Issue: ${source.last_error}` : source.last_checked ? `Checked ${checkedAt(source.last_checked)}` : "Not checked yet"}</span>
+                <span className="source-item-meta" title={source.last_error ?? source.note ?? ""}>{!source.enabled ? source.note ?? "Disabled" : source.last_error ? `Issue: ${source.last_error}` : source.last_checked ? `Checked ${checkedAt(source.last_checked)}` : "Not checked yet"}</span>
                 <ExternalLink size={12} />
               </a>
             ))}
