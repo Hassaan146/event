@@ -10,6 +10,7 @@ from .db import connection, utc_now
 from .extract import (
     enrich_with_groq,
     is_future_event,
+    is_hackathon,
     is_relevant_to_islamabad,
     is_technology_related,
     local_extract,
@@ -32,8 +33,9 @@ SOURCE_CONCURRENCY = 4
 def _is_tech_event(text: str) -> bool:
     lowered = text.casefold()
     has_event_term = any(re.search(rf"\b{re.escape(term)}s?\b", lowered) for term in EVENT_TERMS)
-    is_hackathon = bool(re.search(r"\bhackathons?\b", lowered))
-    return has_event_term and (is_hackathon or is_technology_related(text))
+    return (has_event_term or is_hackathon(text)) and (
+        is_hackathon(text) or is_technology_related(text)
+    )
 
 
 def _plain_text(value: str) -> str:

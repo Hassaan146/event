@@ -184,6 +184,46 @@ def test_refresh_persists_and_filters_future_events(tmp_path, monkeypatch):
         assert remaining[0]["category"] == "Tech workshop"
 
 
+def test_refresh_saves_future_islamabad_hack_day_from_publisher_feed(tmp_path, monkeypatch):
+    source = Source(
+        id="pakistan-hackathons",
+        name="Pakistan Hackathons",
+        kind="rss",
+        url="https://pakistanhackathons.com/rss.xml",
+        publisher="Pakistan Hackathons",
+    )
+
+    class HackDayConnector:
+        async def fetch(self, _source: Source) -> list[FeedItem]:
+            return [
+                FeedItem(
+                    title="Open Source Hack Day — CloudCon Day 2",
+                    url="https://pakistanhackathons.com/events/open-source-hack-day-cloudcon-day-2",
+                    summary=(
+                        "1 Nov 2026 | Islamabad | Organised by AWS SBG at "
+                        "National University of Technology | Price: TBA"
+                    ),
+                    published_at=None,
+                )
+            ]
+
+    monkeypatch.setattr(db, "DATABASE_PATH", tmp_path / "events.sqlite")
+    monkeypatch.setattr(main, "load_sources", lambda: [source])
+    monkeypatch.setattr(ingest, "CONNECTORS", {"rss": HackDayConnector()})
+    monkeypatch.setattr(ingest, "enrich_with_groq", no_ai)
+
+    with TestClient(main.app) as client:
+        response = client.post("/api/refresh")
+        events = client.get("/api/events").json()["events"]
+
+    assert response.json()["events_saved"] == 1
+    assert len(events) == 1
+    assert events[0]["title"] == "Open Source Hack Day — CloudCon Day 2"
+    assert events[0]["event_date"] == "2026-11-01"
+    assert events[0]["category"] == "Hackathon"
+    assert events[0]["registration_status"] == "unknown"
+
+
 def test_refresh_reports_noneligible_sources_as_skipped(tmp_path, monkeypatch):
     source = Source(
         id="review-source",

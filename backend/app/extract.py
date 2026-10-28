@@ -79,7 +79,7 @@ def local_extract(title: str, text: str) -> dict[str, Any]:
     has_tech_context = is_technology_related(combined)
     event_date = _date_from_text(combined)
     category = None
-    if "hackathon" in lowered:
+    if is_hackathon(combined):
         category = "Hackathon"
     elif has_tech_context and "meetup" in lowered:
         category = "Tech meetup"
@@ -135,6 +135,10 @@ def _team_size(match: re.Match[str] | None) -> str | None:
     if match.group(2):
         return f"{match.group(1)}–{match.group(2)} members"
     return f"{match.group(1)} members"
+
+
+def is_hackathon(text: str) -> bool:
+    return bool(re.search(r"\bhack(?:athons?|[\s-]days?)\b", text, re.IGNORECASE))
 
 
 async def enrich_with_groq(title: str, text: str, extracted: dict[str, Any]) -> dict[str, Any]:
