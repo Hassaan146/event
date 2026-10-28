@@ -54,14 +54,34 @@ def test_registry_attempts_all_indexed_sources_without_bypassing_blocks():
     sources = load_sources()
     active = [source for source in sources if source.enabled]
     ids = [source.id for source in sources]
-    assert len(active) == 60
-    assert len(sources) == 60
+    removed_ids = {
+        "allevents-islamabad",
+        "eventbrite-tech-pakistan",
+        "devpost-hackathons",
+        "luma-community-events",
+        "mlh-hackathons-reference",
+        "nic-islamabad-reference",
+        "hackscout",
+        "pasha-startup-hub",
+        "linkedin-events",
+        "facebook-events",
+        "10times",
+        "acm",
+        "wikicfp",
+        "pasha",
+        "nascon",
+        "punjab-it-board",
+        "aws-user-groups",
+        "owasp-events",
+        "uet-lahore",
+    }
+    assert len(active) == 41
+    assert len(sources) == 41
     assert len(ids) == len(set(ids))
-    assert any(source.kind == "event-directory" for source in active)
+    assert not any(source.kind == "event-directory" for source in active)
     assert all(source.crawl_policy == "eligible" for source in sources)
-    assert sum(source.kind == "discover" for source in sources) == 48
-    assert any(source.url == "https://hack-scout-delta.vercel.app/events" for source in sources)
-    assert any(source.url == "https://startups.pasha.org.pk/" for source in sources)
+    assert sum(source.kind == "discover" for source in sources) == 30
+    assert not removed_ids.intersection(ids)
 
 
 def test_all_registered_enabled_feeds_have_unique_hosts_and_urls():
@@ -72,9 +92,9 @@ def test_all_registered_enabled_feeds_have_unique_hosts_and_urls():
 def test_all_indexed_sources_have_an_explicit_crawl_policy_and_discovery_connector():
     sources = load_sources()
 
-    assert len(sources) == 60
+    assert len(sources) == 41
     assert all(source.crawl_policy == "eligible" for source in sources)
-    assert sum(source.kind == "discover" for source in sources) == 48
+    assert sum(source.kind == "discover" for source in sources) == 30
 
 
 def test_discovery_parser_extracts_declared_same_host_feed_and_jsonld_event():

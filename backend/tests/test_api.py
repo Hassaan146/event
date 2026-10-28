@@ -319,6 +319,7 @@ def test_duplicate_event_keeps_source_attribution_with_extracted_facts(tmp_path,
 
 def test_refresh_attempts_and_reports_every_eligible_registry_source(tmp_path, monkeypatch):
     sources = load_sources()
+    expected_source_count = len(sources)
     monkeypatch.setattr(db, "DATABASE_PATH", tmp_path / "events.sqlite")
     monkeypatch.setattr(main, "load_sources", lambda: sources)
     connector = EmptyConnector()
@@ -334,12 +335,12 @@ def test_refresh_attempts_and_reports_every_eligible_registry_source(tmp_path, m
 
     assert response.status_code == 200
     result = response.json()
-    assert result["sources_attempted"] == 60
+    assert result["sources_attempted"] == expected_source_count
     assert result["sources_succeeded"] == 0
-    assert result["sources_empty"] == 60
+    assert result["sources_empty"] == expected_source_count
     assert result["sources_skipped"] == 0
     assert result["sources_failed"] == 0
-    assert len(connector.source_ids) == 60
-    assert len(source_statuses) == 60
+    assert len(connector.source_ids) == expected_source_count
+    assert len(source_statuses) == expected_source_count
     assert all(source["crawl_status"] == "empty" for source in source_statuses)
     assert all(source["last_attempted"] for source in source_statuses)

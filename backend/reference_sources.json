@@ -1,15 +1,5 @@
 [
   {
-    "id": "hackscout",
-    "name": "HackScout · Hackathons, workshops and meetups",
-    "kind": "discover",
-    "url": "https://hack-scout-delta.vercel.app/events",
-    "publisher": "HackScout",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
     "id": "pakistanistartup",
     "name": "Pakistan Startup · Founder events and startup community",
     "kind": "discover",
@@ -20,61 +10,11 @@
     "crawl_policy": "eligible"
   },
   {
-    "id": "pasha-startup-hub",
-    "name": "PASHA Startup Hub · Startup and ICT industry events",
-    "kind": "discover",
-    "url": "https://startups.pasha.org.pk/",
-    "publisher": "PASHA Startup Hub",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
-    "id": "linkedin-events",
-    "name": "LinkedIn Events · Professional tech events",
-    "kind": "discover",
-    "url": "https://www.linkedin.com/events/",
-    "publisher": "LinkedIn",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
-    "id": "facebook-events",
-    "name": "Facebook Events · Local tech meetups",
-    "kind": "discover",
-    "url": "https://www.facebook.com/events/",
-    "publisher": "Facebook",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
-    "id": "10times",
-    "name": "10times · Technology expos and conferences",
-    "kind": "discover",
-    "url": "https://10times.com/",
-    "publisher": "10times",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
     "id": "conference-alerts",
     "name": "Conference Alerts · Academic technology conferences",
     "kind": "discover",
     "url": "https://conferencealerts.com/",
     "publisher": "Conference Alerts",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
-    "id": "wikicfp",
-    "name": "WikiCFP · Computer science calls for papers",
-    "kind": "discover",
-    "url": "http://www.wikicfp.com/",
-    "publisher": "WikiCFP",
     "enabled": true,
     "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
     "crawl_policy": "eligible"
@@ -110,31 +50,11 @@
     "crawl_policy": "eligible"
   },
   {
-    "id": "pasha",
-    "name": "P@SHA · Software industry events",
-    "kind": "discover",
-    "url": "https://www.pasha.org.pk/",
-    "publisher": "P@SHA",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
     "id": "pseb-techdestination",
     "name": "PSEB / TechDestination · Pakistan IT industry events",
     "kind": "discover",
     "url": "https://techdestination.com/",
     "publisher": "PSEB",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
-    "id": "punjab-it-board",
-    "name": "Punjab IT Board · Technology programs and competitions",
-    "kind": "discover",
-    "url": "https://pitb.gov.pk/",
-    "publisher": "Punjab IT Board",
     "enabled": true,
     "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
     "crawl_policy": "eligible"
@@ -180,26 +100,6 @@
     "crawl_policy": "eligible"
   },
   {
-    "id": "acm",
-    "name": "ACM · Computer science conferences and chapters",
-    "kind": "discover",
-    "url": "https://www.acm.org/",
-    "publisher": "ACM",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
-    "id": "aws-user-groups",
-    "name": "AWS User Groups · Developer and cloud events",
-    "kind": "discover",
-    "url": "https://aws.amazon.com/developer/community/usergroups/",
-    "publisher": "Amazon Web Services",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
     "id": "microsoft-reactor",
     "name": "Microsoft Reactor · Developer workshops",
     "kind": "discover",
@@ -220,31 +120,11 @@
     "crawl_policy": "eligible"
   },
   {
-    "id": "owasp-events",
-    "name": "OWASP Events · Application security meetups",
-    "kind": "discover",
-    "url": "https://owasp.org/events/",
-    "publisher": "OWASP",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
     "id": "nust",
     "name": "NUST · University technology events",
     "kind": "discover",
     "url": "https://nust.edu.pk/",
     "publisher": "NUST",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
-    "id": "nascon",
-    "name": "FAST-NUCES / NaSCon · Student technology events",
-    "kind": "discover",
-    "url": "https://nascon.com.pk/",
-    "publisher": "FAST-NUCES / NaSCon",
     "enabled": true,
     "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
     "crawl_policy": "eligible"
@@ -295,16 +175,6 @@
     "kind": "discover",
     "url": "https://itu.edu.pk/",
     "publisher": "IT University Lahore",
-    "enabled": true,
-    "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
-    "crawl_policy": "eligible"
-  },
-  {
-    "id": "uet-lahore",
-    "name": "UET Lahore · Engineering and technology events",
-    "kind": "discover",
-    "url": "https://uet.edu.pk/",
-    "publisher": "UET Lahore",
     "enabled": true,
     "note": "Public discovery candidate; each refresh checks robots and page access. Restrictions are never bypassed.",
     "crawl_policy": "eligible"
