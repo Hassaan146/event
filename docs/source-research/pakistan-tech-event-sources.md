@@ -165,3 +165,42 @@ sites visibly discuss events but do not expose data in these supported forms.
 No custom per-site integration was added in this pass. The app preserves
 source provenance and leaves unavailable facts unknown rather than inventing
 them.
+
+## Follow-up: focused tech-training and community sources
+
+The later focused check added two Pakistan-relevant sources after testing their
+exact public URLs with the same discovery connector:
+
+| Source | Live preflight | Decision |
+|---|---|---|
+| [Tech Valley Pakistan training programs](https://techvalley.pk/trainings/) | Reachable; six public cards parsed, including technology literacy and AI bootcamp program announcements | Added as `techvalley-training`. This is a training/program publisher, not a calendar; cards are still subject to the app's date, topic, and Islamabad relevance filters. |
+| [GDG Islamabad](https://gdg.community.dev/gdg-islamabad/) | Reachable; zero parser-compatible event items | Added as `gdg-islamabad-events` as a relevant local developer-community source. A valid empty result is not evidence that the chapter has no events. |
+
+Two candidates were deliberately not added: Eventbrite's Islamabad-wide
+workshops browse page parsed unrelated voice-over, clothing, business, and
+other non-technical listings; the tech topic filter would not make that page a
+focused tech-workshop source. Guessed GDG-on-campus NUST and QAU URLs returned
+404, and Tech Valley's guessed `/events/` route returned 404. The Luma
+Islamabad candidate could not pass the crawler's robots/redirect check.
+
+The current registry is **59 unique sources**: 11 RSS feeds and 48 public-page
+discovery sources. The focused candidates are checked alongside the prior
+registry; each source's actual crawl outcome is stored separately from whether
+it produced a future, eligible Islamabad event.
+
+## Latest live verification
+
+The latest full refresh attempted all **59 configured sources** through the
+compliant connectors: 30 returned items, 28 fetched successfully with no
+parser-compatible items, one failed with a network disconnect, and none were
+skipped. Across the run, 438 feed/page items were parsed and three future
+Islamabad-relevant events passed the app's filters. The failed source was
+PakEvents Islamabad (`RemoteProtocolError: Server disconnected without
+sending a response`); it was not bypassed or counted as a valid empty result.
+The API source index exposed all 59 configured entries after the run.
+
+The new Tech Valley page was reachable and returned six cards but no event
+survived the future-date and Islamabad relevance filters. GDG Islamabad was
+reachable with a valid empty result. These are useful distinctions: page
+availability does not guarantee that the current page contains a qualifying
+event.

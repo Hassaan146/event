@@ -378,5 +378,25 @@
     "enabled": true,
     "note": "Public university events archive; last preflight returned 11 parsed items.",
     "crawl_policy": "eligible"
+  },
+  {
+    "id": "gdg-islamabad-events",
+    "name": "Google Developer Groups · Islamabad",
+    "kind": "discover",
+    "url": "https://gdg.community.dev/gdg-islamabad/",
+    "publisher": "Google Developer Groups Islamabad",
+    "enabled": true,
+    "note": "Local developer-community chapter page; preflight was reachable but exposed no parser-compatible event listings.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "techvalley-training",
+    "name": "Tech Valley Pakistan · Training programs",
+    "kind": "discover",
+    "url": "https://techvalley.pk/trainings/",
+    "publisher": "Tech Valley Pakistan",
+    "enabled": true,
+    "note": "Pakistan-focused technology training and program announcements; preflight returned six public cards, not all of which are events.",
+    "crawl_policy": "eligible"
   }
 ]

@@ -76,12 +76,12 @@ def test_registry_attempts_all_indexed_sources_without_bypassing_blocks():
         "uet-lahore",
         "pkcert-events",
     }
-    assert len(active) == 57
-    assert len(sources) == 57
+    assert len(active) == 59
+    assert len(sources) == 59
     assert len(ids) == len(set(ids))
     assert not any(source.kind == "event-directory" for source in active)
     assert all(source.crawl_policy == "eligible" for source in sources)
-    assert sum(source.kind == "discover" for source in sources) == 46
+    assert sum(source.kind == "discover" for source in sources) == 48
     assert not removed_ids.intersection(ids)
 
 
@@ -93,9 +93,9 @@ def test_all_registered_enabled_feeds_have_unique_hosts_and_urls():
 def test_all_indexed_sources_have_an_explicit_crawl_policy_and_discovery_connector():
     sources = load_sources()
 
-    assert len(sources) == 57
+    assert len(sources) == 59
     assert all(source.crawl_policy == "eligible" for source in sources)
-    assert sum(source.kind == "discover" for source in sources) == 46
+    assert sum(source.kind == "discover" for source in sources) == 48
 
 
 def test_researched_pakistan_event_sources_use_verified_public_pages():
@@ -121,6 +121,8 @@ def test_researched_pakistan_event_sources_use_verified_public_pages():
         "invest2innovate": "https://invest2innovate.com/",
         "the-nest-io": "https://thenest.io/",
         "qau-events": "https://qau.edu.pk/events/",
+        "gdg-islamabad-events": "https://gdg.community.dev/gdg-islamabad/",
+        "techvalley-training": "https://techvalley.pk/trainings/",
     }
 
     assert {source_id: sources[source_id].url for source_id in expected_urls} == expected_urls
