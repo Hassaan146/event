@@ -368,5 +368,15 @@
     "enabled": true,
     "note": "Canonical public startup incubator site; current parser found no event items.",
     "crawl_policy": "eligible"
+  },
+  {
+    "id": "qau-events",
+    "name": "Quaid-i-Azam University · Public events",
+    "kind": "discover",
+    "url": "https://qau.edu.pk/events/",
+    "publisher": "Quaid-i-Azam University",
+    "enabled": true,
+    "note": "Public university events archive; last preflight returned 11 parsed items.",
+    "crawl_policy": "eligible"
   }
 ]
