@@ -85,3 +85,10 @@
 - Empty results remain enabled when the crawler completed successfully.
 - Removed candidates retain exclusion reasons in the research record.
 - No custom scraper, login flow, anti-bot workaround, or unrelated UI change is included.
+
+### Follow-up: additional university source sweep
+
+- [x] Tested six additional public pages with the existing compliant crawler.
+- [x] Added QAU's reachable events archive; recorded 11 parsed raw items.
+- [x] Kept the failed FAST, Bahria, Air University, IEEE vTools, and PROCOM URLs out of the registry.
+- [x] Re-ran full 57-source refresh, backend tests/Ruff, and frontend lint/build.

@@ -17,13 +17,13 @@ qualifying event.
 
 ## Final full-registry run
 
-The final run completed at **2026-10-28 19:22:58 UTC**:
+The first final run completed at **2026-10-29 17:37:27 UTC**:
 
 | Result | Count |
 |---|---:|
-| Configured and attempted | 56 |
-| Parsed items from sources | 425 |
-| Successful sources with parsed items | 28 |
+| Configured and attempted | 57 |
+| Parsed items from sources | 430 |
+| Successful sources with parsed items | 29 |
 | Successful empty sources | 28 |
 | Failed or blocked sources | 0 |
 | Skipped sources | 0 |
@@ -35,6 +35,11 @@ Open Source Hack Day — CloudCon Day 2 (Nov 1), and Open Source Hackathon NUST
 the listing does not establish team-size or eligibility details when those
 facts were absent from captured text.
 
+The added Quaid-i-Azam University events page returned 11 raw event items.
+These are not necessarily technology-related or eligible for display; each
+item still goes through the normal topic, future-date, and Islamabad/online
+filters.
+
 ### Sources that yielded parsed items
 
 Counts are raw feed/listing items, not accepted future Islamabad events.
@@ -43,7 +48,7 @@ Counts are raw feed/listing items, not accepted future Islamabad events.
 |---|---:|
 | TechJuice | 15 |
 | ProPakistani | 10 |
-| Dawn | 28 |
+| Dawn | 26 |
 | Express Tribune Technology | 27 |
 | The News International Technology | 7 |
 | Daily Times | 10 |
@@ -54,7 +59,7 @@ Counts are raw feed/listing items, not accepted future Islamabad events.
 | Daily Pakistan | 10 |
 | PhoneWorld | 20 |
 | Pakistan Hackathons | 8 |
-| Meetup Islamabad technology events | 12 |
+| Meetup Islamabad technology events | 8 |
 | Ignite events | 10 |
 | Pakistani Startup | 18 |
 | PSEB / TechDestination | 10 |
@@ -69,6 +74,7 @@ Counts are raw feed/listing items, not accepted future Islamabad events.
 | NIC Karachi | 10 |
 | Eventbrite Islamabad technology | 6 |
 | Invest2Innovate | 10 |
+| Quaid-i-Azam University events | 11 |
 
 Eventbrite's broad browse results can be noisy; every event still goes through
 the app's topic, date, and Islamabad/online eligibility filters.
@@ -91,46 +97,65 @@ site has no events; it does mean this run did not extract any.
 
 ## Candidate exclusions
 
-### Removed after the full crawler run
+### Removed after a historical candidate crawl
 
 | Source | Observed result | Decision |
 |---|---|---|
-| PKCERT events (`pkcert.gov.pk/events.asp`) | The crawler could not check `robots.txt` (`RobotsFetchError`, underlying `ConnectError`) during the initial 57-source run. | Removed from the active registry. It was not included in the final 56-source run. This is a failed access-policy check, not evidence that the site has no events. |
+| PKCERT events (`https://pkcert.gov.pk/events.asp`) | The crawler could not check `robots.txt` (`RobotsFetchError`, underlying `ConnectError`) during the historical 57-candidate run. | Removed from the active registry before the 56-source baseline run and remains absent from the current 57-source registry. This is a failed access-policy check, not evidence that the site has no events. |
 
-### Not enabled after live preflight
+### Not enabled after exact-URL preflight
 
-| Candidate | Observed result | Reason not enabled |
+| Candidate URL | Observed result | Reason not enabled |
 |---|---|---|
-| Devpost | HTTP 403 | Access denied |
-| MLH | Redirected away from the candidate URL | The crawler refuses redirects |
-| DoraHacks | `robots.txt` returned HTTP 405 | Could not establish permission |
-| GEN Global | `robots.txt` returned HTTP 403 | Could not establish permission |
-| ITCN Asia | `robots.txt` returned HTTP 406 | Could not establish permission |
-| DigiSkills | TLS certificate failure | Public connection could not be verified |
-| Procom | DNS resolution failure | Unreachable during check |
-| Plan9 | Request timed out | No usable response during check |
-| 10Pearls events page | HTTP 404 | Candidate event page unavailable |
-| DevOpsDays Islamabad direct page | Response exceeded the crawler's 2 MB limit | Direct page unsupported under current bounded-fetch policy; dev.events Pakistan remains enabled as an alternate listing source |
-| P@SHA events page | Parsed placeholder text (“Hello world!”) | Not a usable event listing |
-| CUST events page | Page reported “Nothing Found” | No usable listing surfaced |
-| WordCamp Islamabad 2026 | Event dates were Oct 24–25, 2026 | Historical event page; no future edition was confirmed |
-| Luma Pakistan | Surfaced a 2020 event | Stale listing, not a current event source |
-| FAST-NUCES | Tested public homepage was not an event listing; no crawler-compatible events page was verified | Do not treat a generic homepage as an event feed |
+| `https://devpost.com/hackathons` | HTTP 403 | Access denied |
+| `https://mlh.io/seasons/2026/events` | Robots check redirected | Crawler refuses redirects; permission could not be established |
+| `https://dorahacks.io/hackathon` | `robots.txt` returned HTTP 405 | Permission could not be established |
+| `https://genglobal.org/events` | `robots.txt` returned HTTP 403 | Permission could not be established |
+| `https://itcnasia.com/events/` | `robots.txt` returned HTTP 406 | Permission could not be established |
+| `https://digiskills.pk/` | TLS certificate verification failure while checking robots | Public connection could not be verified |
+| `https://procom.com.pk/` | HTTP 404 | Candidate page unavailable |
+| `https://plan9.pitb.gov.pk/` | Robots check timed out | No usable permission response |
+| `https://10pearls.com/events/` | HTTP 404 | Candidate event page unavailable |
+| `https://devopsdays.org/events/2026-islamabad/welcome/` | Response exceeded the crawler's 2 MB limit | Direct page unsupported under current bounded-fetch policy; dev.events Pakistan remains enabled as an alternate listing source |
+| `https://pasha.org.pk/events/` | Redirected | Crawler refuses redirects |
+| `https://cust.edu.pk/events/` | Malformed HTML (`ParseError: mismatched tag`) | Current parser could not safely parse the response |
+| `https://islamabad.wordcamp.org/2026/` | 16 items parsed, but 2026 event dates were Oct 24–25 | Historical event page; no future edition was confirmed |
+| `https://lu.ma/pakistan` | Robots check redirected | Crawler refuses redirects; permission could not be established |
+| `https://nu.edu.pk/Events` | HTTP 404 | Exact candidate route unavailable; generic homepage is not an event feed |
+| `https://www.bahria.edu.pk/events/` | HTTP 500 | Exact candidate route returned server error |
+| `https://www.au.edu.pk/Pages/Events/Events.aspx` | HTTP 404 | Exact candidate route unavailable |
+| `https://events.vtools.ieee.org/m/events` | HTTP 404 | Exact candidate route unavailable |
 
 These results are time-sensitive. A blocked or unavailable candidate may be
 reconsidered after its public access or event page changes, without bypassing
-the restriction.
+the restriction. The earlier 56-source run was a baseline; the current final
+57-source run below includes QAU and excludes PKCERT.
 
 ## Registry additions and URL improvements
 
-The final index has **56 unique sources**: 11 RSS feeds and 45 public-page
+The final index has **57 unique sources**: 11 RSS feeds and 46 public-page
 discovery sources. Added sources include Bano Qabil, Code for Pakistan, ASPIRE
 Pakistan, lablab.ai, dev.events Pakistan, Founder Institute Islamabad, AI
 Tinkerers Lahore and Karachi, Friends of Figma Lahore, NIC Karachi, Eventbrite
 Islamabad technology, NIC Islamabad, NUTECH, Invest2Innovate, The Nest I/O,
-and PhoneWorld. Existing entries were updated to use the verified Indus AI
-Week Sindh events site, NUST events page, and Meetup's Islamabad technology
-browse page.
+PhoneWorld, and Quaid-i-Azam University. Existing entries were updated to use
+the verified Indus AI Week Sindh events site, NUST events page, and Meetup's
+Islamabad technology browse page.
+
+## Additional live preflight sweep
+
+The follow-up checked public pages from Pakistan's university, IEEE, event
+platform, and hackathon ecosystem using the same compliant discovery connector.
+Exact outcomes and decisions are recorded in the exclusion table above. The
+one crawler-compatible additional publisher was:
+
+| Candidate URL | Result | Decision |
+|---|---|---|
+| `https://qau.edu.pk/events/` | Reachable; 11 parsed items | Added as `qau-events`; valid even if later crawls return empty |
+
+These are URL-level outcomes, not claims that the organizations themselves
+never publish events. The final 57-source refresh was then run with QAU
+included; all configured sources were attempted, with no failures or skips.
 
 ## Limitations
 
