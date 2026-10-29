@@ -197,7 +197,10 @@ skipped. Across the run, 438 feed/page items were parsed and three future
 Islamabad-relevant events passed the app's filters. The failed source was
 PakEvents Islamabad (`RemoteProtocolError: Server disconnected without
 sending a response`); it was not bypassed or counted as a valid empty result.
-The API source index exposed all 59 configured entries after the run.
+An isolated connector retry later fetched successfully with zero cards, but
+two subsequent refresh-level retries again received the disconnect. Its
+latest recorded status therefore remains a network error, not a valid empty
+result. The API source index exposed all 59 configured entries after the run.
 
 The new Tech Valley page was reachable and returned six cards but no event
 survived the future-date and Islamabad relevance filters. GDG Islamabad was
