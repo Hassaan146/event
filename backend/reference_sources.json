@@ -398,5 +398,25 @@
     "enabled": true,
     "note": "Pakistan-focused technology training and program announcements; preflight returned six public cards, not all of which are events.",
     "crawl_policy": "eligible"
+  },
+  {
+    "id": "bahria-university-news",
+    "name": "Bahria University · Public news and event announcements",
+    "kind": "discover",
+    "url": "https://bahria.edu.pk/",
+    "publisher": "Bahria University",
+    "enabled": true,
+    "note": "Official public campus news carousel; preflight parsed 20 announcement cards. Event dates and registration are only included when explicitly present in card text.",
+    "crawl_policy": "eligible"
+  },
+  {
+    "id": "iiui-events",
+    "name": "International Islamic University Islamabad · Events",
+    "kind": "discover",
+    "url": "https://www.iiu.edu.pk/category/events/",
+    "publisher": "International Islamic University Islamabad",
+    "enabled": true,
+    "note": "Official events category with a declared same-origin RSS feed; preflight returned 15 page/feed items.",
+    "crawl_policy": "eligible"
   }
 ]

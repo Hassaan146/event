@@ -200,7 +200,7 @@ def test_refresh_saves_future_islamabad_hack_day_from_publisher_feed(tmp_path, m
                     title="Open Source Hack Day — CloudCon Day 2",
                     url="https://pakistanhackathons.com/events/open-source-hack-day-cloudcon-day-2",
                     summary=(
-                        "1 Nov 2026 | Islamabad | Organised by AWS SBG at "
+                        "1 Nov 2030 | Islamabad | Organised by AWS SBG at "
                         "National University of Technology | Price: TBA"
                     ),
                     published_at=None,
@@ -219,7 +219,7 @@ def test_refresh_saves_future_islamabad_hack_day_from_publisher_feed(tmp_path, m
     assert response.json()["events_saved"] == 1
     assert len(events) == 1
     assert events[0]["title"] == "Open Source Hack Day — CloudCon Day 2"
-    assert events[0]["event_date"] == "2026-11-01"
+    assert events[0]["event_date"] == "2030-11-01"
     assert events[0]["category"] == "Hackathon"
     assert events[0]["registration_status"] == "unknown"
 

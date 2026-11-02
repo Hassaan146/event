@@ -27,6 +27,13 @@ EVENT_TERMS = (
     "challenge",
     "bootcamp",
     "networking event",
+    "tech fusion",
+    "tech fest",
+    "festival",
+    "expo",
+    "exhibition",
+    "conclave",
+    "symposium",
 )
 SOURCE_CONCURRENCY = 4
 

@@ -76,12 +76,12 @@ def test_registry_attempts_all_indexed_sources_without_bypassing_blocks():
         "uet-lahore",
         "pkcert-events",
     }
-    assert len(active) == 59
-    assert len(sources) == 59
+    assert len(active) == 61
+    assert len(sources) == 61
     assert len(ids) == len(set(ids))
     assert not any(source.kind == "event-directory" for source in active)
     assert all(source.crawl_policy == "eligible" for source in sources)
-    assert sum(source.kind == "discover" for source in sources) == 48
+    assert sum(source.kind == "discover" for source in sources) == 50
     assert not removed_ids.intersection(ids)
 
 
@@ -93,9 +93,9 @@ def test_all_registered_enabled_feeds_have_unique_hosts_and_urls():
 def test_all_indexed_sources_have_an_explicit_crawl_policy_and_discovery_connector():
     sources = load_sources()
 
-    assert len(sources) == 59
+    assert len(sources) == 61
     assert all(source.crawl_policy == "eligible" for source in sources)
-    assert sum(source.kind == "discover" for source in sources) == 48
+    assert sum(source.kind == "discover" for source in sources) == 50
 
 
 def test_researched_pakistan_event_sources_use_verified_public_pages():
@@ -123,6 +123,8 @@ def test_researched_pakistan_event_sources_use_verified_public_pages():
         "qau-events": "https://qau.edu.pk/events/",
         "gdg-islamabad-events": "https://gdg.community.dev/gdg-islamabad/",
         "techvalley-training": "https://techvalley.pk/trainings/",
+        "bahria-university-news": "https://bahria.edu.pk/",
+        "iiui-events": "https://www.iiu.edu.pk/category/events/",
     }
 
     assert {source_id: sources[source_id].url for source_id in expected_urls} == expected_urls
@@ -310,6 +312,38 @@ def test_discovery_parser_closes_event_cards_with_void_html_elements():
     items, _ = source_module._parse_discovery_page(page, "https://example.com/events")
 
     assert [item.title for item in items] == ["First tech meetup", "Second AI meetup"]
+
+
+def test_discovery_parser_reads_bahria_university_news_cards():
+    page = """
+      <div class="stayupdatedcarousel-cell">
+        <a href="/page/RedirectToPageTemplate?pageContentId=10001&amp;websiteId=1">
+          <img src="/images/tech-fusion.jpg" alt="Event image">
+        </a>
+        <div class="stayupdated_carousel_heading_box">
+          <h2>Bahria University presents Tech Fusion</h2>
+          <a class="stayupdated-read_more_btn"
+             href="/page/RedirectToPageTemplate?pageContentId=10001&amp;websiteId=1">
+            Read More
+          </a>
+        </div>
+      </div>
+    """
+
+    items, _ = source_module._parse_discovery_page(page, "https://bahria.edu.pk/")
+
+    assert len(items) == 1
+    assert items[0].title == "Bahria University presents Tech Fusion"
+    assert items[0].url == (
+        "https://bahria.edu.pk/page/RedirectToPageTemplate"
+        "?pageContentId=10001&websiteId=1"
+    )
+
+
+def test_tech_fusion_is_recognized_as_a_technology_event():
+    from app.ingest import _is_tech_event
+
+    assert _is_tech_event("Bahria University presents Tech Fusion 2026")
 
 
 def test_get_limited_rejects_encoded_and_oversized_responses():

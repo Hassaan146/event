@@ -183,7 +183,7 @@ focused tech-workshop source. Guessed GDG-on-campus NUST and QAU URLs returned
 404, and Tech Valley's guessed `/events/` route returned 404. The Luma
 Islamabad candidate could not pass the crawler's robots/redirect check.
 
-The current registry is **59 unique sources**: 11 RSS feeds and 48 public-page
+The current registry is **61 unique sources**: 11 RSS feeds and 50 public-page
 discovery sources. The focused candidates are checked alongside the prior
 registry; each source's actual crawl outcome is stored separately from whether
 it produced a future, eligible Islamabad event.
@@ -207,3 +207,39 @@ survived the future-date and Islamabad relevance filters. GDG Islamabad was
 reachable with a valid empty result. These are useful distinctions: page
 availability does not guarantee that the current page contains a qualifying
 event.
+
+## University-wide source expansion
+
+At the user's request, official university announcements are now included
+alongside the secondary publishers. Bahria's homepage was parsed using its
+public `stayupdatedcarousel-cell` news cards, and IIUI's category archive
+exposes a same-origin RSS feed:
+
+| University source | Live preflight | Outcome |
+|---|---|---|
+| [Bahria University](https://bahria.edu.pk/) | Robots check allowed access; 20 public news cards parsed | Added as `bahria-university-news`. The currently visible carousel did not contain a Tech Fusion card, so this source addition alone does not confirm or list that event. |
+| [IIUI Events](https://www.iiu.edu.pk/category/events/) | 15 items returned from the page and its declared feed | Added as `iiui-events`; old/past event coverage remains subject to future-date filtering. |
+
+Other tested university URLs were not added because they were not currently
+usable under the crawler's rules: FAST events returned 404 and the Islamabad
+campus URL redirected; NUML events returned 500; PIEAS robots returned 406;
+IST, Foundation University, Riphah, SZABIST Islamabad, and NED event routes
+returned 404 or 403; COMSATS Islamabad's robots check failed TLS validation;
+UET's root redirected; UET Taxila timed out at robots; and GCU Lahore could
+not resolve. The app does not bypass those outcomes.
+
+This expands coverage, but “all” cannot truthfully mean every university
+society, social-media announcement, or campus post. Source coverage is
+explicitly finite and each source's current attempt status is shown in the UI.
+
+The full registry refresh after this expansion attempted all **61** configured
+sources: 32 returned items, 27 had valid empty results, two failed, and none
+were skipped. There were 490 parsed items and two events passed the current
+eligibility filters. Bahria returned 20 public carousel items and IIUI returned
+22 page/feed items; neither produced a current future Islamabad event in this
+run. The two failures were PakEvents Islamabad (network disconnect) and Indus
+AI Week (the crawler could not resolve the host to validate its robots check).
+Tech Fusion was not among the 20 cards exposed by Bahria's current homepage, so
+adding this source improves university coverage but does not confirm that
+specific event. The crawler does not infer a date or registration state from
+the event name alone.
