@@ -418,5 +418,15 @@
     "enabled": true,
     "note": "Official events category with a declared same-origin RSS feed; preflight returned 15 page/feed items.",
     "crawl_policy": "eligible"
+  },
+  {
+    "id": "fast-nuces-news-events",
+    "name": "FAST-NUCES · Public news and events",
+    "kind": "discover",
+    "url": "https://www.nu.edu.pk/",
+    "publisher": "FAST-NUCES",
+    "enabled": true,
+    "note": "Official public homepage; its current News & Events cards expose a small rotating subset, not the full Islamabad-campus society calendar.",
+    "crawl_policy": "eligible"
   }
 ]

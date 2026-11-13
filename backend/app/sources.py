@@ -24,6 +24,12 @@ HOST_DELAY_SECONDS = 2.0
 MAX_FEED_BYTES = 2_000_000
 MAX_ROBOTS_BYTES = 256_000
 MAX_DISCOVERED_FEEDS = 3
+VOID_HTML_ELEMENTS = frozenset(
+    {
+        "area", "base", "br", "col", "embed", "hr", "img", "input",
+        "link", "meta", "param", "source", "track", "wbr",
+    }
+)
 
 
 class RobotsFetchError(Exception):
@@ -371,15 +377,16 @@ class DiscoveryPageParser(HTMLParser):
             self._jsonld = []
 
         if self._card is not None:
-            if tag not in {
-                "area", "base", "br", "col", "embed", "hr", "img", "input",
-                "link", "meta", "param", "source", "track", "wbr",
-            }:
+            if tag not in VOID_HTML_ELEMENTS:
                 self._card_depth += 1
-            if tag == "a" and self._anchor_depth is None:
+            if tag == "a":
                 href = attributes.get("href")
                 if href and not self._card["url"]:
                     self._card["url"] = href
+                classes = (attributes.get("class") or "").casefold().split()
+                if self._anchor_depth is None and (
+                    not self._card["title"] or "staff-name" in classes
+                ):
                     self._anchor_depth = self._card_depth
             if tag in ("h1", "h2", "h3", "h4", "h5", "h6"):
                 self._heading_depth = self._card_depth
@@ -392,6 +399,7 @@ class DiscoveryPageParser(HTMLParser):
                     "event-item",
                     "event-listing",
                     "stayupdatedcarousel-cell",
+                    "staff-info",
                 )
                 for token in class_tokens
             ) or (
@@ -408,6 +416,8 @@ class DiscoveryPageParser(HTMLParser):
                 self._card_depth = 1
 
     def handle_endtag(self, tag: str) -> None:
+        if tag in VOID_HTML_ELEMENTS:
+            return
         if self._jsonld is not None and tag == "script":
             self.events.extend(_jsonld_events("".join(self._jsonld)))
             self._jsonld = None
@@ -440,8 +450,9 @@ class DiscoveryPageParser(HTMLParser):
             if self._heading_depth is not None:
                 self._card["title"] += f" {data}"
                 self._card["text"] += f" {data}"
-            elif self._anchor_depth is not None and not self._card["title"]:
-                self._card["title"] += f" {data}"
+            elif self._anchor_depth is not None and not self._card["title"].strip():
+                if data.strip():
+                    self._card["title"] += f" {data}"
             else:
                 self._card["text"] += f" {data}"
 

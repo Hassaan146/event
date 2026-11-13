@@ -76,12 +76,12 @@ def test_registry_attempts_all_indexed_sources_without_bypassing_blocks():
         "uet-lahore",
         "pkcert-events",
     }
-    assert len(active) == 61
-    assert len(sources) == 61
+    assert len(active) == 62
+    assert len(sources) == 62
     assert len(ids) == len(set(ids))
     assert not any(source.kind == "event-directory" for source in active)
     assert all(source.crawl_policy == "eligible" for source in sources)
-    assert sum(source.kind == "discover" for source in sources) == 50
+    assert sum(source.kind == "discover" for source in sources) == 51
     assert not removed_ids.intersection(ids)
 
 
@@ -93,9 +93,9 @@ def test_all_registered_enabled_feeds_have_unique_hosts_and_urls():
 def test_all_indexed_sources_have_an_explicit_crawl_policy_and_discovery_connector():
     sources = load_sources()
 
-    assert len(sources) == 61
+    assert len(sources) == 62
     assert all(source.crawl_policy == "eligible" for source in sources)
-    assert sum(source.kind == "discover" for source in sources) == 50
+    assert sum(source.kind == "discover" for source in sources) == 51
 
 
 def test_researched_pakistan_event_sources_use_verified_public_pages():
@@ -125,6 +125,7 @@ def test_researched_pakistan_event_sources_use_verified_public_pages():
         "techvalley-training": "https://techvalley.pk/trainings/",
         "bahria-university-news": "https://bahria.edu.pk/",
         "iiui-events": "https://www.iiu.edu.pk/category/events/",
+        "fast-nuces-news-events": "https://www.nu.edu.pk/",
     }
 
     assert {source_id: sources[source_id].url for source_id in expected_urls} == expected_urls
@@ -344,6 +345,30 @@ def test_tech_fusion_is_recognized_as_a_technology_event():
     from app.ingest import _is_tech_event
 
     assert _is_tech_event("Bahria University presents Tech Fusion 2026")
+
+
+def test_fast_news_event_cards_include_title_and_happening_date():
+    page = """
+      <div class="staff-info">
+        <a href="/Events/Details/1450" class="staff-avatar"><img src="/event.jpg" /></a>
+        <a href="/Events/Details/1450" class="staff-name">IBM Qiskit Workshop</a>
+        <div class="staff-job">Happening Date: 20 Nov 2026</div>
+      </div>
+    """
+
+    items, _ = source_module._parse_discovery_page(page, "https://www.nu.edu.pk/")
+
+    assert len(items) == 1
+    assert items[0].title == "IBM Qiskit Workshop"
+    assert items[0].url == "https://www.nu.edu.pk/Events/Details/1450"
+    assert "20 Nov 2026" in items[0].summary
+
+
+def test_qiskit_and_quantum_workshops_are_recognized_as_technology_events():
+    from app.ingest import _is_tech_event
+
+    assert _is_tech_event("IBM Qiskit workshop in Islamabad")
+    assert _is_tech_event("Quantum computing meetup in Islamabad")
 
 
 def test_get_limited_rejects_encoded_and_oversized_responses():

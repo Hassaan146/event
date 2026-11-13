@@ -183,7 +183,7 @@ focused tech-workshop source. Guessed GDG-on-campus NUST and QAU URLs returned
 404, and Tech Valley's guessed `/events/` route returned 404. The Luma
 Islamabad candidate could not pass the crawler's robots/redirect check.
 
-The current registry is **61 unique sources**: 11 RSS feeds and 50 public-page
+The current registry is **62 unique sources**: 11 RSS feeds and 51 public-page
 discovery sources. The focused candidates are checked alongside the prior
 registry; each source's actual crawl outcome is stored separately from whether
 it produced a future, eligible Islamabad event.
@@ -243,3 +243,35 @@ Tech Fusion was not among the 20 cards exposed by Bahria's current homepage, so
 adding this source improves university coverage but does not confirm that
 specific event. The crawler does not infer a date or registration state from
 the event name alone.
+
+## Follow-up: FAST-NUCES and Qiskit coverage
+
+The user reported a separate IBM Qiskit event at FAST Islamabad. The earlier
+FAST candidate used `/Events` (404), and the Islamabad subdomain's old
+`/Media/NewsList` path now redirects or fails. The reachable national FAST
+homepage at [nu.edu.pk](https://www.nu.edu.pk/) visibly links its current
+News & Events section and uses `.staff-info` cards; its homepage currently
+exposes only a small, rotating set of notices. The source is now registered as
+`fast-nuces-news-events`, and its staff-card layout is supported by the
+discovery parser. Qiskit and quantum computing are now recognized as technical
+topics, so relevant workshops are no longer rejected solely for not containing
+generic “technology” wording.
+
+This does not prove that the exact FAST Qiskit event was listed on the
+homepage: the current cards are mostly a rotating subset, and the Islamabad
+campus site is not currently fetchable through the known public route. The
+event may have been promoted through a student-society or social channel not
+covered by this compliant crawler. The Bahria homepage source similarly
+returned 20 current cards and did not expose a Tech Fusion card. Both were
+therefore missed due to source/discovery coverage, not because the parser
+confirmed that the events did not exist. Past events are still excluded, and
+the app still requires a source-supported date and Islamabad relevance before
+listing an event.
+
+The post-change refresh attempted all **62** sources: 32 returned items, 28
+were valid empty results, two failed, and none were skipped. FAST returned
+three homepage cards, Bahria 20, and IIUI 22; none of those three university
+sources produced an eligible future Islamabad event in that run. The two
+unrelated failures were NUST (malformed XML response) and lablab.ai (redirect
+refused by policy). The registry and live source-status API both expose all
+62 configured entries.

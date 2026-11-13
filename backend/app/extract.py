@@ -34,6 +34,8 @@ TECH_PATTERNS = (
     r"\bcloud computing\b",
     r"\bweb development\b",
     r"\bapp development\b",
+    r"\bqiskit\b",
+    r"\bquantum computing\b",
 )
 
 
